@@ -3,7 +3,7 @@ import "../Component/Main.css";
 function Main() {
   return (
     <>
-      <div className="container">
+      <div className="container" id="home">
         <div className="row">
           <div className="col-md-6 col-12">
             <div className="banner-left">

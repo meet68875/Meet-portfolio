@@ -48,12 +48,7 @@ function Experience() {
       </div>
       <div className="timeline">
         {experiences.map((exp, index) => (
-          <div
-            className={`timeline-item ${
-              index % 2 === 0 ? "left" : "right"
-            }`}
-            key={index}
-          >
+          <div className={`timeline-item ${index % 2 === 0 ? "left" : "right"}`} key={index}>
             <div className="timeline-content">
               <button className="btn-date">{exp.date}</button>
               <h3 className="role">{exp.role}</h3>

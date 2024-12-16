@@ -5,18 +5,7 @@
   padding-bottom: 20px;
   margin-top: 0px;
 }
-.heading h5 {
-  -webkit-text-stroke-width: 2px;
-  -webkit-text-stroke-color: #292929;
-  font-size: 7vw;
-  color: transparent;
-  font-weight: 600;
-  letter-spacing: 0.8rem;
-  opacity: 0.05;
-  pointer-events: none;
-  margin: 0px;
-  padding: 0px;
-}
+
 .about-img{
   border: 2px solid #cb7c6f;
 }
@@ -34,14 +23,7 @@
   position: relative;
   bottom: 70px;
 }
-.heading-border {
-  height: 4px;
-  width: 40px;
-  margin-bottom: 10px;
-  margin-top: 0px;
-  display: inline-block;
-  background-color: #cb7c6f;
-}
+
 #ts h4 {
   border-left: 2px solid #ea4020;
   padding-left: 10px;

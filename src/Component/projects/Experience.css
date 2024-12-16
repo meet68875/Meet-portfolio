@@ -1,16 +1,5 @@
     
-.heading h5 {
-    -webkit-text-stroke-width: 2px;
-    -webkit-text-stroke-color: #292929;
-    font-size: 7vw;
-    color: transparent;
-    font-weight: 600;
-    letter-spacing: 0.8rem;
-    opacity: 0.05;
-    pointer-events: none;
-    margin: 0px;
-    padding: 0px;
-}
+
 .exp{
     padding: 20px 30px;
     background: #fff;

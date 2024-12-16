@@ -1,16 +1,4 @@
-    
-.heading h5 {
-  -webkit-text-stroke-width: 2px;
-  -webkit-text-stroke-color: #292929;
-  font-size: 7vw;
-  color: transparent;
-  font-weight: 600;
-  letter-spacing: 0.8rem;
-  opacity: 0.05;
-  pointer-events: none;
-  margin: 0px;
-  padding: 0px;
-}
+
 .exp{
   padding: 20px 30px;
   background: #fff;
@@ -55,18 +43,7 @@
   position: relative;
   margin-bottom: 30px;
 }
-.heading h5 {
-  -webkit-text-stroke-width: 2px;
-  -webkit-text-stroke-color: #292929;
-  font-size: 7vw;
-  color: transparent;
-  font-weight: 600;
-  letter-spacing: 0.8rem;
-  opacity: 0.05;
-  pointer-events: none;
-  margin: 0;
-  padding: 0;
-}
+
 
 .timeline {
   position: relative;
@@ -174,6 +151,14 @@
   padding: 0 0 0 1.5rem; /* Indent bullet points */
   list-style-position: outside; /* Align bullets outside the content */
 }
+.heading-border {
+  display: inline-block;
+  width: 40px;
+  height: 3px;
+  background-color: #ea4020;
+  margin: 15px 15px;
+  border-radius: 2px;
+}
 
 .timeline-content ul li {
   margin-bottom: 10px;
@@ -183,25 +168,126 @@
   text-align: left; /* Align text with the bullets */
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   .timeline:before {
-    left: 20px; /* Adjust central line to align with mobile layout */
+    left: 20px;
   }
 
   .timeline-item {
     width: 100%;
     text-align: left;
-    padding-left: 40px; /* Indent content */
+    padding-left: 40px;
+  }
+  .heading-border{
+    border: none;
+  }
+  .timeline-item.left:before,
+  .timeline-item.right:before {
+    left: 10px;
+  }
+
+  .timeline-content {
+    padding: 15px 20px; /* Adjust padding for smaller screens */
+  }
+
+  .timeline-content h3 {
+    font-size: 16px;
+  }
+
+  .timeline-content h4 {
+    font-size: 14px;
+  }
+
+  .timeline-content ul li {
+    font-size: 13px;
+  }
+
+  .card .btn-date {
+    width: 6rem;
+    font-size: 12px; /* Smaller button text */
+  }
+}
+
+@media (max-width: 768px) {
+  /* Remove the background text */
+  .heading h5 {
+    display: none; /* Hide the background text on small screens */
+  }
+
+  /* Remove the orange heading border */
+  .heading-border {
+    display: none; /* Hide the border on small screens */
+  }
+
+  /* Adjust the timeline items */
+  .timeline:before {
+    left: 20px;
+  }
+
+  .timeline-item {
+    width: 100%;
+    text-align: left;
+    padding-left: 40px;
   }
 
   .timeline-item.left:before,
   .timeline-item.right:before {
-    left: 10px; /* Move nodes to the left for smaller screens */
+    left: 10px;
   }
 
-  .timeline-item.left .timeline-content,
-  .timeline-item.right .timeline-content {
-    margin: 0; /* Remove auto margins for alignment */
+  .timeline-content {
+    padding: 15px 20px; /* Adjust padding for smaller screens */
+  }
+
+  .timeline-content h3 {
+    font-size: 16px;
+  }
+
+  .timeline-content h4 {
+    font-size: 14px;
+  }
+
+  .timeline-content ul li {
+    font-size: 13px;
+  }
+
+  .card .btn-date {
+    width: 6rem;
+    font-size: 12px; /* Smaller button text */
+  }
+}
+
+@media (max-width: 480px) {
+  .heading h2 {
+    font-size: 28px;
+  }
+
+  .timeline-container {
+    padding: 30px 10px;
+  }
+
+  .timeline-content {
+    padding: 10px 15px;
+  }
+
+  .timeline-content h3 {
+    font-size: 14px;
+  }
+
+  .timeline-item.right {
+    left: 0%;
+  }
+
+  .timeline-content h4 {
+    font-size: 12px;
+  }
+
+  .timeline-content ul li {
+    font-size: 12px;
+  }
+
+  .card .btn-date {
+    width: 5rem;
+    font-size: 11px; /* Smaller button text */
   }
 }

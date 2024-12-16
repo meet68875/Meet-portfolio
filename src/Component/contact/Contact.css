@@ -5,18 +5,7 @@
     margin-top: 0px;
   }
   
-  .heading h5 {
-    font-size: 7vw;
-    color: transparent;
-    font-weight: 600;
-    letter-spacing: 0.8rem;
-    opacity: 0.05;
-    pointer-events: none;
-    margin: 0px;
-    padding: 0px;
-    -webkit-text-stroke-width: 2px;
-    -webkit-text-stroke-color: #292929;
-  }
+ 
   
   .heading h2 {
     font-size: 2.5rem;
@@ -27,15 +16,7 @@
     display: inline-block;
   }
   
-  .heading-border {
-    display: inline-block;
-    width: 40px;
-    height: 3px;
-    background-color: #ea4020;
-    margin: 0 15px;
-    border-radius: 2px;
-  }
-  
+ 
   .contact-info {
     background-color: #f8f9fa;
     padding: 20px 30px;
