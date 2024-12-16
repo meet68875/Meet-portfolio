@@ -40,11 +40,11 @@ function Services() {
                   style={{ backgroundColor: "#ef7641", height: "8rem" }}
                 />
               </TimelineSeparator>
-              <TimelineContent style={{ height: "12em" }}>
-                <Typography variant="h1" style={{ fontSize: "2vw" }}>
+              <TimelineContent >
+                <Typography variant="h1" className="timeline-text">
                   SHREE SWAMINARAYAN GURUKUL OF COMPUTER SCIENCE, BHAVNAGAR
                 </Typography>
-                2020- 2023
+                2020-2023
               </TimelineContent>
             </TimelineItem>
             <TimelineItem>
@@ -57,11 +57,11 @@ function Services() {
                   }}
                 />
               </TimelineSeparator>
-              <TimelineContent>
-                <Typography variant="h1" style={{ fontSize: "2vw" }}>
+              <TimelineContent >
+              <Typography variant="h1" className="timeline-text">
                   B M COMMERCE HIGH SCHOOL, BHAVNAGAR
                 </Typography>
-                2020 - 2023
+                2018 - 2020
               </TimelineContent>
             </TimelineItem>
           </Timeline>
