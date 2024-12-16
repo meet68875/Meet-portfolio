@@ -1,0 +1,207 @@
+    
+.heading h5 {
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: #292929;
+  font-size: 7vw;
+  color: transparent;
+  font-weight: 600;
+  letter-spacing: 0.8rem;
+  opacity: 0.05;
+  pointer-events: none;
+  margin: 0px;
+  padding: 0px;
+}
+.exp{
+  padding: 20px 30px;
+  background: #fff;
+  box-shadow: 0 0.375rem 1.5rem 0 rgba(140, 152, 164, 0.125);
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  
+  
+}
+
+.card{
+  display: flex;
+  flex-direction: row;
+  background: transparent;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border:none;
+  flex-wrap: wrap;
+
+}
+.card .btn-date{
+  background: #ea4020;
+  display: inline-block;
+  font-size: 13px;
+  padding: 0.6rem;
+  border-radius: 20px;
+  color: #fff;
+  border: none;
+  margin-left: -5%;
+  margin-bottom: 10px;
+  width: 7rem;
+  cursor:default;
+}
+
+
+.heading h2 {
+  text-align: center;
+  font-size: 36px;
+  font-weight: bold;
+  position: relative;
+  margin-bottom: 30px;
+}
+.heading h5 {
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: #292929;
+  font-size: 7vw;
+  color: transparent;
+  font-weight: 600;
+  letter-spacing: 0.8rem;
+  opacity: 0.05;
+  pointer-events: none;
+  margin: 0;
+  padding: 0;
+}
+
+.timeline {
+  position: relative;
+  margin: 8rem  0;
+  padding: 0;
+  list-style-type: none;
+}
+.timeline-container {
+  padding: 50px 20px;
+  background-color: #f9f9f9;
+  
+}
+/* Timeline Line */
+.timeline:before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  height: 100%;
+  width: 4px;
+  background-color: #2929298c;
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+/* Timeline Item */
+.timeline-item {
+  position: relative;
+  width: 50%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.timeline-item.left {
+  left: 0;
+  text-align: right;
+}
+
+.timeline-item.right {
+  left: 50%;
+}
+
+.timeline-item:before {
+  content: "";
+  position: absolute;
+  top: 30px;
+  width: 20px;
+  height: 20px;
+  background: #ea4020;
+  border-radius: 50%;
+  z-index: 2;
+}
+
+
+.timeline-item.left:before {
+  right: -10px;
+}
+
+.timeline-item.right:before {
+  left: -10px;
+}
+
+/* Timeline Content */
+/* Timeline Content */
+.timeline-content {
+  background: #fff;
+  padding: 20px 30px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  box-shadow: 0 0.375rem 1.5rem 0 rgba(140, 152, 164, 0.125);
+  position: relative;
+  z-index: 3;
+  text-align: left; /* Ensures all text starts from the left */
+}
+
+.timeline-content .btn-date {
+  background: #ea4020;
+  font-size: 13px;
+  padding: 0.6rem;
+  border-radius: 20px;
+  color: #fff;
+  border: none;
+  margin-bottom: 10px;
+  width: 10rem;
+  cursor: default;
+  margin-top: 0; 
+}
+
+.timeline-content h3 {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 10px 0 5px;
+}
+
+.timeline-content h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #666;
+  margin: 5px 0;
+}
+
+/* List Styling */
+.timeline-content ul {
+  margin: 0;
+  padding: 0 0 0 1.5rem; /* Indent bullet points */
+  list-style-position: outside; /* Align bullets outside the content */
+}
+
+.timeline-content ul li {
+  margin-bottom: 10px;
+  color: #555;
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: left; /* Align text with the bullets */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .timeline:before {
+    left: 20px; /* Adjust central line to align with mobile layout */
+  }
+
+  .timeline-item {
+    width: 100%;
+    text-align: left;
+    padding-left: 40px; /* Indent content */
+  }
+
+  .timeline-item.left:before,
+  .timeline-item.right:before {
+    left: 10px; /* Move nodes to the left for smaller screens */
+  }
+
+  .timeline-item.left .timeline-content,
+  .timeline-item.right .timeline-content {
+    margin: 0; /* Remove auto margins for alignment */
+  }
+}
