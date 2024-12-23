@@ -37,7 +37,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end; center;
   gap: 30px; /* Space between elements */
 }
 
@@ -67,7 +67,7 @@
 /* Download Button */
 .download-button {
   display: flex;
-  justify-content: center;
+  justify-content: flex-end; center;
 }
 
 .btn-download {

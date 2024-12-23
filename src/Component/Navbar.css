@@ -5,7 +5,7 @@
 }
 .nav{
     display: flex;
-    justify-content: space-around;
+    justify-content: flex-end; space-around;
     background-color: #fff;
     margin-top: 20px;
     flex-wrap: wrap;
@@ -16,7 +16,7 @@
     cursor: pointer;
 }
 .nav .list-item{
-    justify-content: center;
+    justify-content: flex-end; center;
 }
 .nav .list-item ul{
     margin: 0;
