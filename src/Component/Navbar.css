@@ -15,9 +15,7 @@
     font-size: 5vh;
     cursor: pointer;
 }
-.nav .list-item{
-    justify-content: flex-end; center;
-}
+
 .nav .list-item ul{
     margin: 0;
     padding: 0;
