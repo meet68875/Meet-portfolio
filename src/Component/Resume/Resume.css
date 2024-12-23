@@ -18,7 +18,7 @@
   pointer-events: none;
   margin: 0;
   padding: 0;
-  max-width: 90%; /* Prevent overflow */
+  max-width: 100%; /* Prevent overflow */
   white-space: nowrap; /* Ensures the text stays in one line */
   text-align: center; /* Centers the text */
 }
