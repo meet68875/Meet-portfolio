@@ -7,14 +7,19 @@ import {
   Grid,
   useMediaQuery,
   useTheme,
+  Stack,
 } from "@mui/material";
 import { gsap } from "gsap";
-import { Power3 } from "gsap/all";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import meetImage from "./meet.png";
+
+gsap.registerPlugin(ScrollTrigger);
 
 function Main() {
   const containerRef = useRef(null);
   const textRef = useRef(null);
+  const imageWrapperRef = useRef(null);
+  const dotsBackgroundRef = useRef(null);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -40,7 +45,6 @@ function Main() {
             ease: "power3.out",
           });
         });
-
         letter.addEventListener("mouseleave", () => {
           gsap.to(letter, {
             y: 0,
@@ -52,69 +56,94 @@ function Main() {
       });
     }
 
-    // GSAP Timeline for intro animation
+    // GSAP Timeline for intro animation and ScrollTrigger
     const ctx = gsap.context(() => {
       const timeline = gsap.timeline();
 
       if (!isMobile) {
         // Desktop Animation
-        timeline.from(".banner-left h5", {
-          y: 50,
-          opacity: 0,
-          duration: 1,
-          ease: "power3.out",
-        });
-        timeline.from(
-          ".banner-left .letter",
-          {
+        timeline
+          .from(".banner-left h5", {
             y: 50,
             opacity: 0,
-            stagger: 0.05,
-            duration: 0.8,
-            ease: "power3.out",
-          },
-          "-=0.8"
-        );
-        timeline.from(
-          ".banner-left .line",
-          {
-            scaleX: 0,
-            transformOrigin: "left center",
             duration: 1,
             ease: "power3.out",
+          })
+          .from(
+            ".banner-left .letter",
+            {
+              y: 50,
+              opacity: 0,
+              stagger: 0.05,
+              duration: 0.8,
+              ease: "power3.out",
+            },
+            "-=0.8"
+          )
+          .from(
+            ".banner-left .line",
+            {
+              scaleX: 0,
+              transformOrigin: "left center",
+              duration: 1,
+              ease: "power3.out",
+            },
+            "-=0.5"
+          )
+          .from(
+            ".banner-left h4",
+            {
+              x: -50,
+              opacity: 0,
+              duration: 1,
+              ease: "power3.out",
+            },
+            "-=0.5"
+          )
+          .from(
+            ".banner-left .btn-main",
+            {
+              y: 30,
+              opacity: 0,
+              duration: 1,
+              ease: "power3.out",
+            },
+            "-=0.5"
+          )
+          .from(
+            ".banner-img img",
+            {
+              scale: 0.8,
+              opacity: 0,
+              duration: 1.5,
+              ease: "power3.out",
+            },
+            "-=1"
+          );
+
+        // ScrollTrigger for the main image wrapper (parallax effect)
+        gsap.to(imageWrapperRef.current, {
+          yPercent: -15, // Moves the entire image wrapper up
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top center",
+            end: "bottom top",
+            scrub: true,
           },
-          "-=0.5"
-        );
-        timeline.from(
-          ".banner-left h4",
-          {
-            x: -50,
-            opacity: 0,
-            duration: 1,
-            ease: "power3.out",
+        });
+
+        // ScrollTrigger for the dots background
+        gsap.to(dotsBackgroundRef.current, {
+          backgroundPosition: "center 100%", // Animate background position
+          rotation: 360, // Add rotation as it scrolls
+          ease: "none",
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top center",
+            end: "bottom top",
+            scrub: true, // Smoothly animate with scroll
           },
-          "-=0.5"
-        );
-        timeline.from(
-          ".banner-left .btn-main",
-          {
-            y: 30,
-            opacity: 0,
-            duration: 1,
-            ease: "power3.out",
-          },
-          "-=0.5"
-        );
-        timeline.from(
-          ".banner-img img",
-          {
-            scale: 0.8,
-            opacity: 0,
-            duration: 1.5,
-            ease: "power3.out",
-          },
-          "-=1"
-        );
+        });
       } else {
         // Simple mobile animation
         timeline.from(
@@ -130,6 +159,11 @@ function Main() {
       }
     }, containerRef);
 
+    // Conditionally hide the dots background on mobile
+    if (dotsBackgroundRef.current) {
+      dotsBackgroundRef.current.style.display = isMobile ? 'none' : 'block';
+    }
+
     return () => ctx.revert();
   }, [isMobile]);
 
@@ -137,18 +171,23 @@ function Main() {
     <Box ref={containerRef} sx={{ px: { xs: 2, sm: 4, md: 8 }, py: 10 }}>
       <Container id="home" maxWidth="xl">
         <Grid container spacing={6} alignItems="center" justifyContent="center">
-          <Grid item xs={12} md={6}>
-            <Box
+          <Grid item xs={12} md={6} sx={{ position: "relative" }}>
+            <Stack
               className="banner-left"
-              sx={{ mt: { xs: 4, md: 0 }, mb: { xs: 4, md: 0 } }}
+              spacing={2}
+              sx={{
+                mt: { xs: 4, md: 0 },
+                mb: { xs: 4, md: 0 },
+                textAlign: { xs: "center", md: "left" },
+                alignItems: { xs: "center", md: "flex-start" },
+                position: "relative",
+                zIndex: 1,
+              }}
             >
               <Typography
                 variant="h5"
                 component="h5"
-                sx={{
-                  color: "text.primary",
-                  fontSize: { xs: "1rem", sm: "1.25rem" },
-                }}
+                sx={{ color: "text.primary" }}
               >
                 Hi There, I'm
               </Typography>
@@ -167,9 +206,7 @@ function Main() {
                     cursor: "pointer",
                     mx: "1px",
                   },
-                  "& .letter.space": {
-                    width: "5px",
-                  },
+                  "& .letter.space": { width: "5px" },
                 }}
               >
                 MEET SHAH
@@ -179,8 +216,6 @@ function Main() {
                 sx={{
                   height: "3px",
                   width: "140px",
-                  mb: "9px",
-                  mt: "0px",
                   bgcolor: "#ea4020",
                 }}
               />
@@ -188,11 +223,9 @@ function Main() {
                 variant="h4"
                 component="h4"
                 sx={{
-                  borderLeft: "2px solid #ea4020",
-                  pl: "10px",
+                  borderLeft: { md: "2px solid #ea4020" },
+                  pl: { md: "10px" },
                   fontSize: { xs: "1rem", sm: "1.5rem" },
-                  mb: "25px",
-                  mt: "25px",
                   fontWeight: 200,
                 }}
               >
@@ -219,31 +252,33 @@ function Main() {
               >
                 Contact Me
               </Button>
-            </Box>
+            </Stack>
           </Grid>
-
           <Grid item xs={12} md={6}>
             <Box
+              ref={dotsBackgroundRef}
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                width: "115%",
+                height: "115%",
+                transform: "translate(-35%, -40%)",
+                backgroundImage:
+                  'url("https://demo.dezven.com/project/web-design/portfolio/1/images/dots.png")',
+                backgroundPosition: "center",
+                backgroundSize: "contain",
+                backgroundRepeat: "no-repeat",
+                zIndex: -2,
+              }}
+            />
+            <Box
               className="banner-top"
+              ref={imageWrapperRef}
               sx={{
                 p: "40px",
                 position: "relative",
-                mt: { xs: 0, md: 0 },
                 overflow: "hidden",
-                "&:before": {
-                  content: '""',
-                  backgroundImage:
-                    'url("https://demo.dezven.com/project/web-design/portfolio/1/images/dots.png")',
-                  position: "absolute",
-                  top: 0,
-                  left: { xs: 0, md: "-50px" },
-                  right: 0,
-                  bottom: 0,
-                  backgroundPosition: "left",
-                  backgroundSize: "cover",
-                  animation: "rotate 80s linear infinite",
-                  zIndex: -1,
-                },
                 "&:after": {
                   content: '""',
                   position: "absolute",
@@ -256,10 +291,6 @@ function Main() {
                   borderRadius: { xs: "0% 0% 0% 0%", md: "47% 0% 0% 47%" },
                   bgcolor: "#fff",
                   zIndex: -1,
-                },
-                "@keyframes rotate": {
-                  "0%": { transform: "rotate(0deg)" },
-                  "100%": { transform: "rotate(360deg)" },
                 },
               }}
             >
