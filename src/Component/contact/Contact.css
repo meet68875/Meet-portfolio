@@ -1,18 +1,5 @@
-.heading {
-  text-align: center;
-  width: 100%;
-  padding-bottom: 20px;
-  margin-top: 0px;
-}
 
-.heading h2 {
-  font-size: 2.5rem;
-  font-weight: bold;
-  color: #292929;
-  position: relative;
-  text-transform: uppercase;
-  display: inline-block;
-}
+
 
 .contact-info {
   background-color: #f8f9fa;
@@ -129,11 +116,4 @@
   margin-top: 15px;
 }
 
-@media (max-width: 768px) {
-  .heading {
-    text-align: center;
-    width: 100%;
-    padding-bottom: 20px;
-    margin-top: 5rem;
-  }
-}
+

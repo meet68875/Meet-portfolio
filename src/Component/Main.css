@@ -1,6 +1,12 @@
  .banner-left{
     margin-top:30%;
 }
+.letter {
+    display: inline-block;
+    transition: transform 0.3s ease, color 0.3s ease;
+    cursor: pointer;
+    margin: 0 2px; /* Add margin for spacing between letters */
+  }
 .line{
     height: 3px;
     width: 140px;
@@ -13,8 +19,14 @@
 .banner-left h2{
     color: #292929;
     font-size: 4.5rem;
-    font-weight: 700
+    font-weight: 700;
+    line-height: 1.2;
+  letter-spacing: 3px
 }
+.letter.space {
+    display: inline-block;
+    width: 10px; /* Maintain space between words */
+  }
 .banner-left h4{
     border-left: 2px solid #ea4020;
     padding-left: 10px;
@@ -56,7 +68,7 @@
     color: white;
     padding: 15px;
 }
-.btn-main{
+/* .btn-main{
     padding: 0.8rem 1.7rem;
     border: none;
     border-radius: 10px;
@@ -70,7 +82,7 @@
     color: #010101;
     font-weight: 400;
     border: 1px solid #ea4020;
-}
+} */
 .banner-top{
     padding: 40px;
     position: relative;
@@ -129,7 +141,32 @@
 .banner-left h1{
     font-weight: 900;
 }
-
+.btn-main {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #ea4020;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn-main:hover {
+    background-color: #0056b3;
+    transform: scale(1.2);
+  
+  }
+.line {
+    width: 100px;
+    height: 4px;
+    background-color: #333;
+    margin: 20px 0;
+    transform-origin: left center;
+  }
 @media only screen  and (max-width:768px) {
     .banner-left h4{
         margin-top: 0px;

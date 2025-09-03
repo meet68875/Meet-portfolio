@@ -1,0 +1,81 @@
+/* ComponentTitle.css */
+
+.heading {
+  text-align: center;
+  width: 100%;
+  padding-bottom: 20px;
+  margin-top: 0px;
+}
+
+/* ------------------------------------------- */
+/* Background Text Styles */
+/* ------------------------------------------- */
+.heading h5 {
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: #292929;
+  font-size: 7vw;
+  color: transparent;
+  font-weight: 600;
+  letter-spacing: 0.8rem;
+  opacity: 0.05;
+  pointer-events: none;
+  margin: 0;
+  padding: 0;
+  max-width: 100%;
+  white-space: nowrap;
+  text-align: center;
+
+  /* Key Positioning for Background Effect */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+}
+
+/* ------------------------------------------- */
+/* Main Title Styles */
+/* ------------------------------------------- */
+.heading h2 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #292929;
+  position: relative;
+  text-transform: uppercase;
+  display: inline-block;
+}
+
+.heading-border {
+  display: inline-block;
+  width: 40px;
+  height: 3px;
+  background-color: #ea4020;
+  margin: 15px 15px;
+  border-radius: 2px;
+}
+
+/* ------------------------------------------- */
+/* Responsive Overrides */
+/* ------------------------------------------- */
+
+/* Hide the background text on smaller screens */
+@media (max-width: 768px) {
+  .heading h5 {
+    display: none;
+  }
+  .heading h2 {
+    font-size: 2rem;
+  }
+  .heading-border {
+    width: 25px;
+  }
+}
+
+@media (max-width: 480px) {
+  .heading h2 {
+    font-size: 1.5rem;
+  }
+  .heading-border {
+    width: 15px;
+  }
+}
