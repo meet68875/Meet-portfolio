@@ -17,7 +17,6 @@ import {
   useTheme,
   useMediaQuery,
   CardActions,
-  Divider,
 } from "@mui/material";
 import { GitHub, OpenInNew, Close } from "@mui/icons-material";
 import { gsap } from "gsap";
@@ -71,39 +70,36 @@ const ProjectCard = ({ project, onClick }) => {
 
   return (
     <Card
-      elevation={6} // Using a higher elevation for a better shadow effect
+      elevation={8}
       sx={{
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
+        height: 200, // Fixed height for all cards
+       
+        borderRadius: theme.shape.borderRadius * 2,
         transition: "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
         "&:hover": {
-          transform: "translateY(-8px)",
-          boxShadow: `0 12px 20px rgba(0,0,0,0.15), 0 4px 6px rgba(0,0,0,0.1)`,
-          "& .MuiCardActionArea-focusHighlight": {
-            opacity: 0,
-          },
+          transform: "translateY(-10px)",
+          boxShadow: `0 16px 24px rgba(0,0,0,0.2), 0 6px 10px rgba(0,0,0,0.1)`,
         },
       }}
     >
       <CardActionArea onClick={onClick} sx={{ flexGrow: 1 }}>
-        <CardContent sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
+        <CardContent sx={{ display: "flex", flexDirection: "column", height: "100%", p: 3 }}>
           <Box mb={2}>
             <Chip
               label={date}
               size="small"
-              sx={{ bgcolor: "#ea4020", color: "#fff" }}
+              sx={{ bgcolor: "#ea4020", color: "#fff", fontWeight: 600 }}
             />
           </Box>
           <Typography variant="h5" component="h3" gutterBottom sx={{ fontWeight: 600 }}>
             {title}
           </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ flexGrow: 1 }}>
+          <Typography variant="body2" color="text.secondary" sx={{ flexGrow: 1, lineHeight: 1.6 }}>
             {truncatedDescription}
           </Typography>
         </CardContent>
       </CardActionArea>
-      <CardActions sx={{ justifyContent: "flex-end", px: 2, pb: 2, pt: 0 }}>
+      <CardActions sx={{ justifyContent: "flex-end", px: 3, pb: 3, pt: 0 }}>
         {liveLink && (
           <Button
             size="small"
@@ -112,7 +108,13 @@ const ProjectCard = ({ project, onClick }) => {
             href={liveLink}
             target="_blank"
             rel="noopener"
-            onClick={(e) => e.stopPropagation()} // Prevent modal from opening
+            onClick={(e) => e.stopPropagation()}
+            sx={{
+              color: '#ea4020',
+              '&:hover': {
+                backgroundColor: 'rgba(234, 64, 32, 0.04)',
+              },
+            }}
           >
             Live
           </Button>
@@ -144,7 +146,7 @@ const ProjectDetailsModal = ({ open, project, onClose }) => {
         },
       }}
     >
-      <DialogTitle sx={{ m: 0, p: 2 }}>
+      <DialogTitle sx={{ m: 0, p: 2, borderBottom: `1px solid ${theme.palette.divider}` }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Typography variant="h5" sx={{ fontWeight: 600 }}>{title}</Typography>
           <IconButton
@@ -162,7 +164,6 @@ const ProjectDetailsModal = ({ open, project, onClose }) => {
         </Box>
       </DialogTitle>
       <DialogContent sx={{ p: 3, display: 'flex', flexDirection: 'column', gap: 2 }}>
-        {/* Chips at the top */}
         <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap' }}>
           <Chip
             label={date}
@@ -186,16 +187,12 @@ const ProjectDetailsModal = ({ open, project, onClose }) => {
             />
           )}
         </Box>
-
-        {/* Description Section */}
-        <Divider />
         <Typography variant="h6" component="h4" sx={{ fontWeight: 600, mt: 1 }}>
           Description
         </Typography>
         <Typography variant="body1" color="text.secondary" sx={{ lineHeight: 1.6 }}>
           {description}
         </Typography>
-
       </DialogContent>
       <DialogActions sx={{ p: 2, justifyContent: 'flex-start', gap: 2, flexWrap: 'wrap', borderTop: `1px solid ${theme.palette.divider}` }}>
         {githubLink && (
@@ -206,7 +203,9 @@ const ProjectDetailsModal = ({ open, project, onClose }) => {
             variant="contained"
             sx={{
               bgcolor: theme.palette.grey[900],
-             
+              "&:hover": {
+                bgcolor: "grey.700",
+              },
               textTransform: 'none',
             }}
             startIcon={<GitHub />}
@@ -222,7 +221,9 @@ const ProjectDetailsModal = ({ open, project, onClose }) => {
             variant="contained"
             sx={{
               bgcolor: '#ea4020',
-             
+              "&:hover": {
+                bgcolor: "#d43a1c",
+              },
               textTransform: 'none',
             }}
             startIcon={<OpenInNew />}
@@ -252,6 +253,9 @@ function Projects() {
   };
 
   useEffect(() => {
+    // Add a check to ensure refs are not null before animating
+    if (!headingRef.current || !projectsGridRef.current) return;
+
     const ctx = gsap.context(() => {
       gsap.from(headingRef.current, {
         opacity: 0,
@@ -264,7 +268,10 @@ function Projects() {
         },
       });
 
-      gsap.from(projectsGridRef.current.children, {
+      // Use gsap.utils.toArray() for a robust solution
+      const projectCards = gsap.utils.toArray(projectsGridRef.current.children);
+      
+      gsap.from(projectCards, {
         opacity: 0,
         y: 50,
         stagger: 0.2,
@@ -284,14 +291,9 @@ function Projects() {
     <Box id="projects" sx={{ py: 8, bgcolor: 'background.default' }}>
       <ComponentTitle title="Projects" ref={headingRef} />
       <Container maxWidth="lg" sx={{ mt: 5 }}>
-        <Grid 
-          container 
-          spacing={{ xs: 3, sm: 4, md: 5 }} 
-          justifyContent="center" 
-          ref={projectsGridRef}
-        >
+        <Grid container spacing={{ xs: 3, sm: 4, md: 5 }} justifyContent="center" ref={projectsGridRef}>
           {projectsData.map((project, index) => (
-            <Grid item xs={12} sm={6} md={4} key={index}>
+            <Grid item xs={12} sm={6} md={3} key={index}>
               <ProjectCard project={project} onClick={() => handleOpenModal(project)} />
             </Grid>
           ))}

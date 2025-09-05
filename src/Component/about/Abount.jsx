@@ -1,184 +1,132 @@
-import React, { useEffect, useRef } from "react";
-import { Box, Grid, Typography, Chip } from "@mui/material";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import ComponentTitle from "../UI/ComponentTitle";
-import image from '../coder.jpg'
-gsap.registerPlugin(ScrollTrigger);
+import React from "react";
+import { Box, Typography, Chip, Grid, Card, CardContent } from "@mui/material";
+import image from "../coder.jpg";
 
-// Reusable Skill Chip Component
-const SkillChip = ({ label }) => {
-  return (
-    <Chip
-      label={label}
-      sx={{
-        margin: "0.2rem",
-        backgroundColor: "white",
-        fontSize: "14px",
-        padding: "5px 10px",
-        border: "none",
-        borderRadius: "20px",
-        transition: "0.2s",
-        color: "#000",
-        "&:hover": {
-          backgroundColor: "#ea4020",
-          color: "#ffffff",
-          border: "1px solid #f6e7e4",
-        },
-      }}
-    />
-  );
-};
+const SkillChip = ({ label }) => (
+  <Chip
+    label={label}
+    size="small"
+    sx={{
+      margin: "0.3rem",
+      bgcolor: "white",
+      fontSize: "14px",
+      borderRadius: "20px",
+      color: "#000",
+      boxShadow: 1,
+      "&:hover": {
+        bgcolor: "#ea4020",
+        color: "#fff",
+        border: "1px solid #f6e7e4",
+      },
+    }}
+  />
+);
 
-// New: Reusable Skills Grid Component
-const SkillsGrid = ({ skills }) => {
-  const skillsRef = useRef(null);
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      // Staggered Skill Chips Animation
-      gsap.from(skillsRef.current.children, {
-        opacity: 0,
-        y: 20,
-        stagger: 0.1,
-        duration: 0.5,
-        ease: "power1.out",
-        scrollTrigger: {
-          trigger: skillsRef.current,
-          start: "top 85%",
-        },
-      });
-    }, skillsRef);
-   
-
-    return () => ctx.revert();
-  }, []);
-
-  return (
-    <Box ref={skillsRef}>
-      <Grid container spacing={1} sx={{ justifyContent: { xs: 'center', md: 'flex-start' } }}>
-        {skills.map((skill, index) => (
-          <Grid item key={index}>
-            <SkillChip label={skill} />
-          </Grid>
-        ))}
-      </Grid>
-    </Box>
-  );
-};
-
-function About() {
-  const aboutRef = useRef(null);
-const headingRef = useRef(null); 
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      // About Section Fade-in Animation
-      gsap.from(aboutRef.current, {
-        opacity: 0,
-        y: 50,
-        duration: 1,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: aboutRef.current,
-          start: "top 80%",
-        },
-      });
-    }, aboutRef);
-
-    return () => ctx.revert();
-  }, []);
-
+const About = () => {
   const skills = [
-    "HTML", "CSS", "JavaScript", "React.js", "React Native", "Node.js", "Express.js",
-    "MongoDB", "MySQL", "Material-UI", "Tailwind CSS", "PrimeReact", "Redux",
-    "Context API", "Socket.IO", "GSAP", "PHP", "Git", "Docker", "Arduino",
-    "Problem-Solving", "Teamwork",
+    "HTML", "CSS", "JavaScript", "React.js", "React Native", "Node.js",
+    "Express.js", "MongoDB", "MySQL", "Material-UI", "Tailwind CSS",
+    "PrimeReact", "Redux", "Context API", "Socket.IO", "GSAP", "PHP",
+    "Git", "Docker", "Arduino", "Problem-Solving", "Teamwork",
   ];
 
   return (
-    <Box id="about" ref={aboutRef} sx={{ padding: { xs: 2, md: 8 } }}>
-        <ComponentTitle title="About" ref={headingRef} />
+    <Box
+      id="about"
+      sx={{
+        py: { xs: 4, md: 8 },
+        px: { xs: 2, md: 6 },
+        bgcolor: "#f9f9f9", // light background for whole section
+      }}
+    >
+      <Card
+        sx={{
+          borderRadius: "16px",
+          boxShadow: 3,
+          bgcolor: "#fff",
+          overflow: "hidden",
+        }}
+      >
+        <CardContent sx={{ p: { xs: 3, md: 6 } }}>
+          <Grid container spacing={4} alignItems="center">
+            {/* Left Image */}
+            <Grid size={{ xs: 12, md: 6 }}>
+              <Box
+                sx={{
+                  textAlign: "center",
+                  border: "2px solid #cb7c6f",
+                  borderRadius: "12px",
+                  overflow: "hidden",
+                  boxShadow: 2,
+                }}
+              >
+                <Box
+                  component="img"
+                  src={image}
+                  alt="Meet Shah"
+                  sx={{
+                    width: "100%",
+                    height: "auto",
+                    objectFit: "cover",
+                    display: "block",
+                  }}
+                />
+              </Box>
+            </Grid>
 
-      {/* About Me Section */}
-      <Grid container spacing={4} alignItems="center">
-        <Grid item xs={12} md={5}>
-          <Box
-            sx={{
-              textAlign: "center",
-              border: "2px solid #cb7c6f",
-            }}
-          >
-            <Box
-              component="img"
-              src={image}
-              alt="Meet Shah"
-              sx={{
-                width: "100%",
-                height: "auto",
-                display: "block",
-                position: "relative",
-              }}
-            />
-          </Box>
-        </Grid>
-        <Grid item xs={12} md={7}>
-          <Box
-            sx={{
-              "& h4": {
-                borderLeft: "2px solid #ea4020",
-                paddingLeft: "10px",
-                fontSize: "18px",
-                mt: "25px",
-                mb: "25px",
-              },
-              "& h6": {
-                fontWeight: 500,
-                color: "#292929",
-                fontSize: "18px",
-                mt: "20px",
-                paddingLeft: "10px",
-              },
-              "& p": {
-                paddingLeft: "10px",
-                color: "#555a64",
-                fontSize: "15px",
-                lineHeight: "25px",
-                mt: "15px",
-              },
-            }}
-          >
-            <Typography variant="h4" gutterBottom>
-              About Me
-            </Typography>
-            <Typography variant="h6" gutterBottom>
-              Hello, my name is Meet Shah, and I am a Full Stack Web Developer.
-            </Typography>
-            <Typography paragraph>
-              Welcome to my portfolio! I'm a passionate Full Stack Developer skilled in building scalable web applications using the MERN stack. With expertise in frontend and backend technologies, I aim to deliver high-performance solutions. Let's collaborate to bring creative digital solutions to life!
-            </Typography>
-          </Box>
+            {/* Right Content */}
+            <Grid size={{ xs: 12, md: 6 }}>
+              <Box>
+                <Typography
+                  variant="h4"
+                  sx={{
+                    borderLeft: "4px solid #ea4020",
+                    pl: 1.5,
+                    mb: 2,
+                    fontSize: { xs: "20px", md: "24px" },
+                    fontWeight: 600,
+                  }}
+                >
+                  About Me
+                </Typography>
 
-          {/* Skills Section */}
-          <Typography
-            variant="h4"
-            gutterBottom
-            id="ts"
-            sx={{
-              mt: 4,
-              borderLeft: "2px solid #ea4020",
-              paddingLeft: "10px",
-              fontSize: "18px",
-              mb: "25px",
-              mt: "25px",
-            }}
-          >
-            Technologies and Skills
-          </Typography>
-          <SkillsGrid skills={skills} />
-        </Grid>
-      </Grid>
+                <Typography variant="h6" sx={{ fontWeight: 500, mb: 2 }}>
+                  Hello, my name is Meet Shah, and I am a Full Stack Web Developer.
+                </Typography>
+
+                <Typography sx={{ color: "#555a64", lineHeight: 1.7, mb: 3 }}>
+                  Welcome to my portfolio! I'm a passionate Full Stack Developer
+                  skilled in building scalable web applications using the MERN
+                  stack. With expertise in frontend and backend technologies, I aim
+                  to deliver high-performance solutions. Let's collaborate to bring
+                  creative digital solutions to life!
+                </Typography>
+
+                <Typography
+                  variant="h5"
+                  sx={{
+                    borderLeft: "4px solid #ea4020",
+                    pl: 1.5,
+                    mb: 2,
+                    fontSize: { xs: "18px", md: "20px" },
+                    fontWeight: 600,
+                  }}
+                >
+                  Technologies & Skills
+                </Typography>
+
+                <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+                  {skills.map((skill, i) => (
+                    <SkillChip key={i} label={skill} />
+                  ))}
+                </Box>
+              </Box>
+            </Grid>
+          </Grid>
+        </CardContent>
+      </Card>
     </Box>
   );
-}
+};
 
 export default About;

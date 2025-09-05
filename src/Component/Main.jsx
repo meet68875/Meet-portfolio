@@ -18,13 +18,63 @@ gsap.registerPlugin(ScrollTrigger);
 function Main() {
   const containerRef = useRef(null);
   const textRef = useRef(null);
+  const typewriterRef = useRef(null);
   const imageWrapperRef = useRef(null);
   const dotsBackgroundRef = useRef(null);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-
   useEffect(() => {
-    // Letter-by-letter animation on hover
+    const titles = [
+      "Full-Stack Web Developer",
+      "React Pro",
+      "Node.js Ninja",
+      "Frontend Specialist",
+      "UI/UX Enthusiast",
+      "Pro Coder",
+    ];
+
+    let currentTitle = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+
+    const typeSpeed = 100;
+    const deleteSpeed = 50;
+    const pauseDuration = 1500;
+
+    const type = () => {
+      const fullText = titles[currentTitle];
+      if (typewriterRef.current) {
+        typewriterRef.current.innerText = fullText.substring(0, charIndex);
+      }
+
+      if (!isDeleting && charIndex < fullText.length) {
+        charIndex++;
+        setTimeout(type, typeSpeed);
+      } else if (isDeleting && charIndex > 0) {
+        charIndex--;
+        setTimeout(type, deleteSpeed);
+      } else {
+        if (!isDeleting) {
+          isDeleting = true;
+          setTimeout(type, pauseDuration);
+        } else {
+          isDeleting = false;
+          currentTitle = (currentTitle + 1) % titles.length;
+          setTimeout(type, 400);
+        }
+      }
+    };
+
+    type();
+
+    return () => {
+      if (typewriterRef.current) {
+        typewriterRef.current.innerText = "";
+      }
+    };
+  }, []);
+  useEffect(() => {
+    // Letter-by-letter animation
     if (textRef.current) {
       const letters = textRef.current.innerText.split("");
       textRef.current.innerHTML = letters
@@ -56,12 +106,11 @@ function Main() {
       });
     }
 
-    // GSAP Timeline for intro animation and ScrollTrigger
+    // GSAP animations
     const ctx = gsap.context(() => {
       const timeline = gsap.timeline();
 
       if (!isMobile) {
-        // Desktop Animation
         timeline
           .from(".banner-left h5", {
             y: 50,
@@ -121,9 +170,9 @@ function Main() {
             "-=1"
           );
 
-        // ScrollTrigger for the main image wrapper (parallax effect)
+        // Scroll effects
         gsap.to(imageWrapperRef.current, {
-          yPercent: -15, // Moves the entire image wrapper up
+          yPercent: -15,
           scrollTrigger: {
             trigger: containerRef.current,
             start: "top center",
@@ -132,20 +181,18 @@ function Main() {
           },
         });
 
-        // ScrollTrigger for the dots background
         gsap.to(dotsBackgroundRef.current, {
-          backgroundPosition: "center 100%", // Animate background position
-          rotation: 360, // Add rotation as it scrolls
+          backgroundPosition: "center 100%",
+          rotation: 360,
           ease: "none",
           scrollTrigger: {
             trigger: containerRef.current,
             start: "top center",
             end: "bottom top",
-            scrub: true, // Smoothly animate with scroll
+            scrub: true,
           },
         });
       } else {
-        // Simple mobile animation
         timeline.from(
           ".banner-left h5, .banner-left h2, .banner-left h4, .banner-left .btn-main, .banner-img img",
           {
@@ -159,9 +206,8 @@ function Main() {
       }
     }, containerRef);
 
-    // Conditionally hide the dots background on mobile
     if (dotsBackgroundRef.current) {
-      dotsBackgroundRef.current.style.display = isMobile ? 'none' : 'block';
+      dotsBackgroundRef.current.style.display = isMobile ? "none" : "block";
     }
 
     return () => ctx.revert();
@@ -171,7 +217,8 @@ function Main() {
     <Box ref={containerRef} sx={{ px: { xs: 2, sm: 4, md: 8 }, py: 10 }}>
       <Container id="home" maxWidth="xl">
         <Grid container spacing={6} alignItems="center" justifyContent="center">
-          <Grid item xs={12} md={6} sx={{ position: "relative" }}>
+          {/* Left Text Section */}
+          <Grid size={{ xs: 12, md: 6 }} sx={{ position: "relative" }}>
             <Stack
               className="banner-left"
               spacing={2}
@@ -186,51 +233,65 @@ function Main() {
             >
               <Typography
                 variant="h5"
-                component="h5"
-                sx={{ color: "text.primary" }}
+                sx={{
+                  color: "text.primary",
+                  fontSize: {
+                    xs: "1rem",
+                    sm: "1.3rem",
+                    md: "1.5rem",
+                    lg: "1.8rem",
+                  },
+                  fontWeight: 400,
+                }}
               >
                 Hi There, I'm
               </Typography>
+
               <Typography
                 variant="h2"
-                component="h2"
                 ref={textRef}
                 sx={{
                   color: "#292929",
-                  fontSize: { xs: "2.5rem", sm: "4.5rem" },
-                  fontWeight: 700,
-                  lineHeight: 1.2,
-                  letterSpacing: "3px",
+                  fontSize: {
+                    xs: "2.8rem",
+                    sm: "4.5rem",
+                    md: "5.5rem",
+                    lg: "4.5rem",
+                  },
+                  fontWeight: 600,
+
+                  textAlign: { xs: "center", md: "left" },
                   "& .letter": {
                     display: "inline-block",
                     cursor: "pointer",
                     mx: "1px",
                   },
-                  "& .letter.space": { width: "5px" },
+                  "& .letter.space": { width: "6px" },
                 }}
               >
                 MEET SHAH
               </Typography>
-              <Box
-                className="line"
-                sx={{
-                  height: "3px",
-                  width: "140px",
-                  bgcolor: "#ea4020",
-                }}
-              />
+
               <Typography
                 variant="h4"
-                component="h4"
                 sx={{
-                  borderLeft: { md: "2px solid #ea4020" },
-                  pl: { md: "10px" },
-                  fontSize: { xs: "1rem", sm: "1.5rem" },
-                  fontWeight: 200,
+                  borderLeft: { md: "3px solid #ea4020" },
+                  pl: { md: "12px" },
+                  fontSize: {
+                    xs: "1.2rem",
+                    sm: "1.8rem",
+                    md: "2.2rem",
+                    lg: "2.5rem",
+                  },
+                  fontWeight: 300,
+                  color: "#444",
+                  textAlign: { xs: "center", md: "left" },
+                  minHeight: "50px", // Prevent layout shift
                 }}
               >
-                Full-Stack Web Developer
+                <span ref={typewriterRef}></span>
               </Typography>
+
               <Button
                 className="btn-main"
                 variant="contained"
@@ -254,15 +315,17 @@ function Main() {
               </Button>
             </Stack>
           </Grid>
-          <Grid item xs={12} md={6}>
+
+          {/* Right Image Section */}
+          <Grid size={{ xs: 12, md: 6 }}>
             <Box
               ref={dotsBackgroundRef}
               sx={{
                 position: "absolute",
-                top: "50%",
-                left: "50%",
-                width: "115%",
-                height: "115%",
+                top: "54%",
+                left: "57%",
+                width: "100%",
+                height: "100%",
                 transform: "translate(-35%, -40%)",
                 backgroundImage:
                   'url("https://demo.dezven.com/project/web-design/portfolio/1/images/dots.png")',
@@ -282,13 +345,11 @@ function Main() {
                 "&:after": {
                   content: '""',
                   position: "absolute",
-                  bottom: 0,
-                  top: 0,
-                  left: 0,
+                  inset: 0,
                   width: { xs: "100%", md: "calc(100% + 50px)" },
                   border: "20px solid #ea4020",
                   borderRight: 0,
-                  borderRadius: { xs: "0% 0% 0% 0%", md: "47% 0% 0% 47%" },
+                  borderRadius: { xs: "0", md: "47% 0% 0% 47%" },
                   bgcolor: "#fff",
                   zIndex: -1,
                 },
