@@ -213,6 +213,7 @@ function Education() {
         mt: { xs: "5%", sm: "5%", md: "5%" },
         mb: { xs: "12%", sm: "8%", md: "5%" },
       }}
+      
     >
       <ComponentTitle title="Education" ref={headingRef} />
       <Container maxWidth="md">

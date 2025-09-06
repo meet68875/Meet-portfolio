@@ -9,11 +9,11 @@ const Footer = () => {
     <Box
       component="footer"
       sx={{
-        bgcolor: "background.paper",
         color: "text.primary",
         py: 6,
         borderTop: "1px solid #e0e0e0",
       }}
+      bgcolor={"#f7f7f7"}
     >
       <Container maxWidth="lg">
         <Stack

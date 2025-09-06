@@ -138,7 +138,7 @@ function Experience() {
   }, [isMobile]);
 
   return (
-    <Box id="experience" sx={{ py: 8, bgcolor: "background.default" }}>
+    <Box id="experience" sx={{ py: 8 ,bgcolor:"#ffffff"}}>
       <ComponentTitle title="Experience" ref={headingRef} />
       <Container maxWidth="lg" sx={{ mt: 5 }}>
         {isMobile ? (
@@ -256,7 +256,7 @@ function Experience() {
                       "&:hover": {
                         transform: "translateY(-5px)",
                       },
-           borderLeft: "4px solid #ef7641",
+                      borderLeft: "4px solid #ef7641",
 
                       textAlign: "left",
                     }}

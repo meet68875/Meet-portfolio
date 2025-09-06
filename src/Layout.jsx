@@ -5,7 +5,7 @@ import { Box, Container } from '@mui/material';
 function Layout({ children }) {
   return (
     <Box>
-      <Container maxWidth="xl" disableGutters={false}>
+      <Container maxWidth="2xl" disableGutters={false}>
         {children}
       </Container>
     </Box>

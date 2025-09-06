@@ -171,7 +171,7 @@ const Contact = () => {
     <Box
       id="contact"
       ref={sectionRef}
-      sx={{ py: 10, bgcolor: "#fafafa" }}
+      sx={{ py: 10 }}
     >
       <Box ref={titleRef}>
         <ComponentTitle title="Contact us" />

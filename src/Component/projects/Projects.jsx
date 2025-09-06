@@ -168,7 +168,7 @@ const Projects = () => {
   };
 
   return (
-    <Box id="projects" sx={{ py: { xs: 8, md: 12 } }}>
+    <Box id="projects" sx={{ py: { xs: 8, md: 12 } }} bgcolor={"f0f4f8"}>
       <Container maxWidth="xl">
         <ComponentTitle title="projects" ref={headingRef} />
 

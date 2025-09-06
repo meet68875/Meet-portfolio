@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Box, Typography, Chip, Grid, Card, CardContent } from "@mui/material";
 import image from "../coder.jpg";
+import ComponentTitle from "../UI/ComponentTitle";
 
 const SkillChip = ({ label }) => (
   <Chip
@@ -23,6 +24,7 @@ const SkillChip = ({ label }) => (
 );
 
 const About = () => {
+  const headingRef = useRef(null);
   const skills = [
     "HTML", "CSS", "JavaScript", "React.js", "React Native", "Node.js",
     "Express.js", "MongoDB", "MySQL", "Material-UI", "Tailwind CSS",
@@ -31,19 +33,22 @@ const About = () => {
   ];
 
   return (
+    <>
     <Box
       id="about"
       sx={{
         py: { xs: 4, md: 8 },
         px: { xs: 2, md: 6 },
-        bgcolor: "#f9f9f9", // light background for whole section
       }}
     >
+    <ComponentTitle title="About" ref={headingRef} />
+
       <Card
         sx={{
           borderRadius: "16px",
           boxShadow: 3,
-          bgcolor: "#fff",
+          bgcolor: "#f9f9f9", // light background for whole section
+
           overflow: "hidden",
            borderLeft: "4px solid #ef7641",
         }}
@@ -127,6 +132,8 @@ const About = () => {
         </CardContent>
       </Card>
     </Box>
+    </>
+
   );
 };
 
