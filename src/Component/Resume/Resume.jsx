@@ -4,41 +4,23 @@ import {
   Button,
   Card,
   CardMedia,
-  Grid,
-  IconButton,
   Typography,
-  useTheme,
   Container,
+  useTheme,
   useMediaQuery,
 } from "@mui/material";
 import DownloadIcon from "@mui/icons-material/Download";
-import CloseIcon from "@mui/icons-material/Close";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Lightbox from "react-image-lightbox"; // Import Lightbox
-import "react-image-lightbox/style.css"; // Import styles
+import Lightbox from "react-image-lightbox";
+import "react-image-lightbox/style.css";
 
 import resumeImage from "./Meet_Shah_Resume_page-0001.jpg";
 import resumeImage1 from "./Meet_Shah_Resume_page-0002.jpg";
+import ComponentTitle from "../UI/ComponentTitle";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const ComponentTitle = React.forwardRef(({ title }, ref) => (
-  <Typography
-    ref={ref}
-    variant="h4"
-    component="h2"
-    sx={{
-      textAlign: "center",
-      my: 4,
-      fontWeight: 600,
-      textTransform: "uppercase",
-      color: "#333",
-    }}
-  >
-    {title}
-  </Typography>
-));
 
 const images = [resumeImage, resumeImage1];
 
@@ -51,7 +33,7 @@ function Resume() {
   const downloadButtonRef = useRef(null);
   const sectionRef = useRef(null);
 
-  // Lightbox state management
+  // Lightbox state
   const [photoIndex, setPhotoIndex] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -62,18 +44,16 @@ function Resume() {
   };
 
   const handleOpen = (index) => {
-    if (isMobile) {
-      return;
-    }
+    if (isMobile) return;
     setPhotoIndex(index);
     setIsOpen(true);
   };
 
   useEffect(() => {
-    const imagesToPreload = [resumeImage, resumeImage1];
-    imagesToPreload.forEach((image) => {
+    // Preload resume images
+    [resumeImage, resumeImage1].forEach((src) => {
       const img = new Image();
-      img.src = image;
+      img.src = src;
     });
 
     const ctx = gsap.context(() => {
@@ -132,76 +112,73 @@ function Resume() {
     >
       <ComponentTitle title="My Resume" ref={headingRef} />
       <Container maxWidth="lg" sx={{ mt: 5 }}>
-        <Grid
-          container
-          spacing={4}
-          justifyContent="center"
+        {/* Flexbox Container */}
+        <Box
           sx={{
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            gap: 4,
             px: { xs: 2, sm: 4, md: 6 },
             mb: { xs: 4, sm: 6, md: 8 },
           }}
         >
-          {/* First Resume Page Card */}
-          <Grid item xs={12} sm={6} md={4}>
-            <Card
-              ref={addToRefs}
-              onClick={() => handleOpen(0)} // Pass index 0
-              sx={{
-                boxShadow: "none",
-                borderRadius: 0,
-                border: "1px solid #e0e0e0",
-                overflow: "hidden",
-                cursor: isMobile ? "default" : "pointer",
-                transition: "transform 0.3s ease-in-out",
-                "&:hover": {
-                  transform: isMobile ? "none" : "translateY(-5px)",
-                  boxShadow: isMobile ? "none" : theme.shadows[3],
-                },
-              }}
-            >
-              <CardMedia
-                component="img"
-                image={resumeImage}
-                alt="Resume Page 1 Preview"
-                sx={{
-                  width: "100%",
-                  height: "auto",
-                }}
-              />
-            </Card>
-          </Grid>
+          {/* Resume Page 1 */}
+          <Card
+            ref={addToRefs}
+            onClick={() => handleOpen(0)}
+            sx={{
+              flex: { xs: "1 1 100%", sm: "1 1 45%", md: "1 1 30%" },
+              maxWidth: { xs: "100%", sm: "45%", md: "30%" },
+              boxShadow: "none",
+              borderRadius: 0,
+              border: "1px solid #e0e0e0",
+              overflow: "hidden",
+              cursor: isMobile ? "default" : "pointer",
+              transition: "transform 0.3s ease-in-out",
+              "&:hover": {
+                transform: isMobile ? "none" : "translateY(-5px)",
+                boxShadow: isMobile ? "none" : theme.shadows[3],
+              },
+            }}
+          >
+            <CardMedia
+              component="img"
+              image={resumeImage}
+              alt="Resume Page 1 Preview"
+              sx={{ width: "100%", height: "auto" }}
+            />
+          </Card>
 
-          {/* Second Resume Page Card */}
-          <Grid item xs={12} sm={6} md={4}>
-            <Card
-              ref={addToRefs}
-              onClick={() => handleOpen(1)} // Pass index 1
-              sx={{
-                boxShadow: "none",
-                borderRadius: 0,
-                border: "1px solid #e0e0e0",
-                overflow: "hidden",
-                cursor: isMobile ? "default" : "pointer",
-                transition: "transform 0.3s ease-in-out",
-                "&:hover": {
-                  transform: isMobile ? "none" : "translateY(-5px)",
-                  boxShadow: isMobile ? "none" : theme.shadows[3],
-                },
-              }}
-            >
-              <CardMedia
-                component="img"
-                image={resumeImage1}
-                alt="Resume Page 2 Preview"
-                sx={{
-                  width: "100%",
-                  height: "auto",
-                }}
-              />
-            </Card>
-          </Grid>
-        </Grid>
+          {/* Resume Page 2 */}
+          <Card
+            ref={addToRefs}
+            onClick={() => handleOpen(1)}
+            sx={{
+              flex: { xs: "1 1 100%", sm: "1 1 45%", md: "1 1 30%" },
+              maxWidth: { xs: "100%", sm: "45%", md: "30%" },
+              boxShadow: "none",
+              borderRadius: 0,
+              border: "1px solid #e0e0e0",
+              overflow: "hidden",
+              cursor: isMobile ? "default" : "pointer",
+              transition: "transform 0.3s ease-in-out",
+              "&:hover": {
+                transform: isMobile ? "none" : "translateY(-5px)",
+                boxShadow: isMobile ? "none" : theme.shadows[3],
+              },
+            }}
+          >
+            <CardMedia
+              component="img"
+              image={resumeImage1}
+              alt="Resume Page 2 Preview"
+              sx={{ width: "100%", height: "auto" }}
+            />
+          </Card>
+        </Box>
 
+        {/* Download button */}
         <Box sx={{ textAlign: "center", mt: 4 }}>
           <Button
             ref={downloadButtonRef}
@@ -227,8 +204,7 @@ function Resume() {
         </Box>
       </Container>
 
-     
-      {/* Lightbox Component */}
+      {/* Lightbox */}
       {isOpen && (
         <Lightbox
           mainSrc={images[photoIndex]}
@@ -236,14 +212,10 @@ function Resume() {
           prevSrc={images[(photoIndex + images.length - 1) % images.length]}
           onCloseRequest={() => setIsOpen(false)}
           onMovePrevRequest={() =>
-            setPhotoIndex(
-              (photoIndex + images.length - 1) % images.length
-            )
+            setPhotoIndex((photoIndex + images.length - 1) % images.length)
           }
           onMoveNextRequest={() =>
-            setPhotoIndex(
-              (photoIndex + 1) % images.length
-            )
+            setPhotoIndex((photoIndex + 1) % images.length)
           }
         />
       )}

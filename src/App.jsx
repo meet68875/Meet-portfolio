@@ -10,6 +10,8 @@ import Experience from "./Component/Experience/Experience";
 import Resume from "./Component/Resume/Resume";
 import LocomotiveScroll from "locomotive-scroll";
 import "locomotive-scroll/dist/locomotive-scroll.css"; // Import Locomotive Scroll CSS
+import Layout from "./Layout";
+import Footer from "./Component/footer/footer";
 
 const App = () => {
   useEffect(() => {
@@ -28,6 +30,7 @@ const App = () => {
   return (
     <div data-scroll-container>
       <Navbar />
+       <Layout>
       <Main />
       <br />
       <Abount />
@@ -36,6 +39,8 @@ const App = () => {
       <Experience />
       <Resume />
       <Contact />
+      <Footer/>
+      </Layout>
     </div>
   );
 };

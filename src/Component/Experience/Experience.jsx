@@ -256,6 +256,8 @@ function Experience() {
                       "&:hover": {
                         transform: "translateY(-5px)",
                       },
+           borderLeft: "4px solid #ef7641",
+
                       textAlign: "left",
                     }}
                   >
@@ -288,6 +290,7 @@ function Experience() {
                         m: 0,
                         p: 0,
                         color: "text.secondary",
+                        
                         listStyle: "none",
                         "& li": {
                           mb: 1,

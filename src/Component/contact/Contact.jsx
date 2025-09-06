@@ -1,86 +1,125 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Box,
   Typography,
-  Grid,
-  Container,
-  TextField,
   Button,
+  TextField,
+  Card,
+  CardContent,
   Snackbar,
   Alert,
-  Link,
-  Paper,
+  Stack,
+  IconButton,
 } from "@mui/material";
-import { Email, Send, Call, LocationOn } from "@mui/icons-material";
 import emailjs from "emailjs-com";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import ComponentTitle from "../UI/ComponentTitle";
+import SendIcon from "@mui/icons-material/Send";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import EmailIcon from "@mui/icons-material/Email";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const Contact = () => {
-  const formRef = useRef(null);
-  const headingRef = useRef(null);
-  const contactInfoRef = useRef(null);
-  const formFieldsRef = useRef([]);
-  formFieldsRef.current = [];
+const contactInfo = {
+  email: "meetdev68875@gmail.com",
+  github: "https://github.com/your-username",
+  linkedin: "https://linkedin.com/in/your-username",
+  location: "Gujarat, India",
+};
 
+const Contact = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     subject: "",
     message: "",
   });
-
-  const [formErrors, setFormErrors] = useState({});
+  const [errors, setErrors] = useState({});
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
-    severity: "success",
+    severity: "info",
   });
 
-  const addToRefs = (el) => {
-    if (el && !formFieldsRef.current.includes(el)) {
-      formFieldsRef.current.push(el);
-    }
-  };
+  const sectionRef = useRef(null);
+  const formRef = useRef(null);
+  const infoRef = useRef(null);
+  const titleRef = useRef(null);
+
+  useEffect(() => {
+    // GSAP Animations
+    const ctx = gsap.context(() => {
+      gsap.from(titleRef.current, {
+        y: 50,
+        opacity: 0,
+        duration: 0.8,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: titleRef.current,
+          start: "top 80%",
+        },
+      });
+
+      gsap.from(formRef.current, {
+        x: -100,
+        opacity: 0,
+        duration: 0.8,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: formRef.current,
+          start: "top 80%",
+        },
+      });
+
+      gsap.from(infoRef.current, {
+        x: 100,
+        opacity: 0,
+        duration: 0.8,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: infoRef.current,
+          start: "top 80%",
+        },
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
 
   const validateForm = () => {
     let tempErrors = {};
-    let isValid = true;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    let formIsValid = true;
 
     if (!formData.name.trim()) {
+      formIsValid = false;
       tempErrors.name = "Name is required.";
-      isValid = false;
     }
     if (!formData.email.trim()) {
+      formIsValid = false;
       tempErrors.email = "Email is required.";
-      isValid = false;
-    } else if (!emailRegex.test(formData.email)) {
-      tempErrors.email = "Invalid email format.";
-      isValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      formIsValid = false;
+      tempErrors.email = "Email is not valid.";
     }
     if (!formData.subject.trim()) {
+      formIsValid = false;
       tempErrors.subject = "Subject is required.";
-      isValid = false;
     }
     if (!formData.message.trim()) {
+      formIsValid = false;
       tempErrors.message = "Message is required.";
-      isValid = false;
     }
 
-    setFormErrors(tempErrors);
-    return isValid;
+    setErrors(tempErrors);
+    return formIsValid;
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    if (formErrors[name]) {
-      setFormErrors({ ...formErrors, [name]: "" });
-    }
   };
 
   const handleSubmit = (e) => {
@@ -102,14 +141,9 @@ const Contact = () => {
     });
 
     emailjs
-      .send(
-        "service_ewt9nwd", // Replace with your EmailJS Service ID
-        "template_rozbnvg", // Replace with your EmailJS Template ID
-        formData,
-        "1iKmxJIKcvH0-u-YR" // Replace with your EmailJS Public Key
-      )
+      .send("service_ewt9nwd", "template_rozbnvg", formData, "1iKmxJIKcvH0-u-YR")
       .then(
-        (result) => {
+        () => {
           setSnackbar({
             open: true,
             message: "Message sent successfully!",
@@ -129,237 +163,179 @@ const Contact = () => {
   };
 
   const handleCloseSnackbar = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
+    if (reason === "clickaway") return;
     setSnackbar({ ...snackbar, open: false });
   };
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      // Animation for the section title
-      gsap.from(headingRef.current, {
-        opacity: 0,
-        y: 20,
-        duration: 0.8,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: headingRef.current,
-          start: "top 90%",
-        },
-      });
-
-      // Animation for the contact info card
-      gsap.from(contactInfoRef.current, {
-        opacity: 0,
-        y: 50,
-        duration: 1.2,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: contactInfoRef.current,
-          start: "top 80%",
-        },
-      });
-
-      // Staggered animation for the form fields
-      gsap.from(formFieldsRef.current, {
-        opacity: 0,
-        y: 30,
-        stagger: 0.2,
-        duration: 1,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: formRef.current,
-          start: "top 75%",
-        },
-      });
-    }, formRef);
-
-    return () => ctx.revert();
-  }, []);
 
   return (
     <Box
       id="contact"
-      sx={{
-        py: 8,
-        bgcolor: "#f9f9f9",
-        minHeight: "100vh",
-      }}
+      ref={sectionRef}
+      sx={{ py: 10, bgcolor: "#fafafa" }}
     >
-      <ComponentTitle title="Contact Me" ref={headingRef} />
-      <Container maxWidth="lg" sx={{ mt: 5 }}>
-        <Paper
-          elevation={6}
-          sx={{
-            p: { xs: 3, md: 6 },
-            borderRadius: 0, // No rounded corners
-          }}
-        >
-          <Grid container spacing={{ xs: 4, md: 8 }} alignItems="flex-start">
-            {/* Contact Info */}
-            <Grid item xs={12} md={4}>
-              <Box
-                ref={contactInfoRef}
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 3,
-                  py: { xs: 0, md: 3 },
-                }}
-              >
-                <Typography
-                  variant="h5"
-                  component="h3"
-                  sx={{ fontWeight: 600 }}
-                >
-                  Get In Touch
-                </Typography>
-                <Typography variant="body1" color="text.secondary">
-                  Feel free to reach out to me for any inquiries, project
-                  collaborations, or just to say hello.
-                </Typography>
-                <Box>
-                  <Box sx={{ display: "flex", alignItems: "center", mb: 1.5 }}>
-                    <Email sx={{ mr: 1, color: "#ea4020" }} />
-                    <Link
-                      href="mailto:meetdev68875@gmail.com"
-                      color="inherit"
-                      underline="none"
-                      sx={{
-                        "&:hover": {
-                          color: "#c32e18",
-                          textDecoration: "underline",
-                        },
-                      }}
-                    >
-                     meetdev68875@gmail.com
-                    </Link>
-                  </Box>
-                  {/* <Box sx={{ display: "flex", alignItems: "center", mb: 1.5 }}>
-                    <Call sx={{ mr: 1, color: "#ea4020" }} />
-                    <Typography variant="body1">+91 9726214508</Typography>
-                  </Box> */}
-                  <Box sx={{ display: "flex", alignItems: "center" }}>
-                    <LocationOn sx={{ mr: 1, color: "#ea4020" }} />
-                    <Typography variant="body1">
-                      Bhavnagar, Gujarat, India
-                    </Typography>
-                  </Box>
-                </Box>
-              </Box>
-            </Grid>
-
-            {/* Contact Form */}
-            <Grid item xs={12} md={8}>
-              <Box component="form" onSubmit={handleSubmit} noValidate ref={formRef}>
-                <Grid container spacing={3}>
-                  <Grid item xs={12} md={6} ref={addToRefs}>
-                    <TextField
-                      fullWidth
-                      label="Your Name *"
-                      name="name"
-                      variant="outlined"
-                      value={formData.name}
-                      onChange={handleChange}
-                      error={!!formErrors.name}
-                      helperText={formErrors.name}
-                      InputProps={{ sx: { borderRadius: 0 } }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={6} ref={addToRefs}>
-                    <TextField
-                      fullWidth
-                      label="Your Email *"
-                      name="email"
-                      type="email"
-                      variant="outlined"
-                      value={formData.email}
-                      onChange={handleChange}
-                      error={!!formErrors.email}
-                      helperText={formErrors.email}
-                      InputProps={{ sx: { borderRadius: 0 } }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} ref={addToRefs}>
-                    <TextField
-                      fullWidth
-                      label="Your Subject *"
-                      name="subject"
-                      variant="outlined"
-                      value={formData.subject}
-                      onChange={handleChange}
-                      error={!!formErrors.subject}
-                      helperText={formErrors.subject}
-                      InputProps={{ sx: { borderRadius: 0 } }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} ref={addToRefs}>
-                    <TextField
-                      fullWidth
-                      label="Your Message *"
-                      name="message"
-                      variant="outlined"
-                      multiline
-                      rows={4}
-                      value={formData.message}
-                      onChange={handleChange}
-                      error={!!formErrors.message}
-                      helperText={formErrors.message}
-                      InputProps={{ sx: { borderRadius: 0 } }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} ref={addToRefs}>
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      endIcon={<Send />}
-                      sx={{
-                        bgcolor: "#ea4020",
-                        "&:hover": {
-                          bgcolor: "#c32e18",
-                        },
-                        mt: 2,
-                        py: 1.5,
-                        px: 4,
-                        textTransform: "uppercase",
-                        fontWeight: "bold",
-                        borderRadius: 0,
-                      }}
-                    >
-                      Send Message
-                    </Button>
-                  </Grid>
-                </Grid>
-              </Box>
-            </Grid>
-          </Grid>
-        </Paper>
-      </Container>
-      {/* Footer */}
-      <Box
-        component="footer"
-        sx={{
-          py: 3,
-          mt: 8,
-          bgcolor: "#f0f0f0",
-          textAlign: "center",
-        }}
-      >
-        <Container maxWidth="lg">
-          <Typography variant="body2" color="text.secondary">
-            Copyright © 2024 All Rights Reserved MEET SHAH
-          </Typography>
-        </Container>
+      <Box ref={titleRef}>
+        <ComponentTitle title="Contact us" />
       </Box>
 
+      {/* Flex Layout */}
+      <Stack
+        direction={{ xs: "column", md: "row" }}
+        spacing={4}
+        alignItems="stretch"
+        justifyContent="center"
+        sx={{ maxWidth: "1200px", mx: "auto", mt: 6 }}
+      >
+        {/* Contact Form */}
+        <Card
+          ref={formRef}
+          sx={{
+            flex: 2,
+            borderRadius: "16px",
+            boxShadow: "0 6px 25px rgba(0,0,0,0.08)",
+            p: 3,
+            bgcolor: "#fff",
+          }}
+        >
+          <CardContent>
+            <Typography variant="h6" gutterBottom sx={{ fontWeight: "bold" }}>
+              Send me a message 📧
+            </Typography>
+            <Typography variant="body2" color="text.secondary" mb={3}>
+              Have a question or want to work together? Let’s connect!
+            </Typography>
+
+            <Box
+              component="form"
+              onSubmit={handleSubmit}
+              noValidate
+              sx={{ "& .MuiTextField-root": { mb: 2 } }}
+            >
+              <TextField
+                fullWidth
+                label="Name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                error={!!errors.name}
+                helperText={errors.name}
+              />
+              <TextField
+                fullWidth
+                label="Email"
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+                error={!!errors.email}
+                helperText={errors.email}
+              />
+              <TextField
+                fullWidth
+                label="Subject"
+                name="subject"
+                value={formData.subject}
+                onChange={handleChange}
+                error={!!errors.subject}
+                helperText={errors.subject}
+              />
+              <TextField
+                fullWidth
+                label="Message"
+                name="message"
+                multiline
+                rows={4}
+                value={formData.message}
+                onChange={handleChange}
+                error={!!errors.message}
+                helperText={errors.message}
+              />
+
+              <Button
+                type="submit"
+                variant="contained"
+                fullWidth
+                endIcon={<SendIcon />}
+                sx={{
+                  bgcolor: "#ea4020",
+                  "&:hover": { bgcolor: "#c4341b" },
+                  py: 1.4,
+                  fontWeight: "bold",
+                  borderRadius: "10px",
+                  mt: 1,
+                }}
+              >
+                Send Message
+              </Button>
+            </Box>
+          </CardContent>
+        </Card>
+
+        {/* Contact Info */}
+        <Card
+          ref={infoRef}
+          sx={{
+            flex: 1,
+            borderRadius: "16px",
+            boxShadow: "0 6px 25px rgba(0,0,0,0.08)",
+            p: 3,
+            bgcolor: "#fff",
+          }}
+        >
+          <CardContent>
+            <Typography variant="h6" gutterBottom sx={{ fontWeight: "bold" }}>
+              Contact Information 📞
+            </Typography>
+            <Stack spacing={3} sx={{ mt: 3 }}>
+              <Stack direction="row" alignItems="center" spacing={2}>
+                <EmailIcon sx={{ color: "#ea4020" }} />
+                <Typography variant="body1">{contactInfo.email}</Typography>
+              </Stack>
+              <Stack direction="row" alignItems="center" spacing={2}>
+                <LocationOnIcon sx={{ color: "#ea4020" }} />
+                <Typography variant="body1">{contactInfo.location}</Typography>
+              </Stack>
+            </Stack>
+
+            {/* Social Links */}
+            <Stack direction="row" spacing={2} sx={{ mt: 4 }}>
+              <IconButton
+                href={contactInfo.github}
+                target="_blank"
+                sx={{
+                  color: "#292929",
+                  "&:hover": { bgcolor: "rgba(41,41,41,0.1)" },
+                }}
+              >
+                <GitHubIcon fontSize="large" />
+              </IconButton>
+              <IconButton
+                href={contactInfo.linkedin}
+                target="_blank"
+                sx={{
+                  color: "#0A66C2",
+                  "&:hover": { bgcolor: "rgba(10,102,194,0.1)" },
+                }}
+              >
+                <LinkedInIcon fontSize="large" />
+              </IconButton>
+            </Stack>
+          </CardContent>
+        </Card>
+      </Stack>
+
+      {/* Snackbar */}
       <Snackbar
         open={snackbar.open}
         autoHideDuration={6000}
         onClose={handleCloseSnackbar}
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       >
-        <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: "100%", borderRadius: 0 }}>
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbar.severity}
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
           {snackbar.message}
         </Alert>
       </Snackbar>

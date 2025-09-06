@@ -17,12 +17,14 @@ gsap.registerPlugin(ScrollTrigger);
 
 function Main() {
   const containerRef = useRef(null);
-  const textRef = useRef(null);
+  const titleRef = useRef(null);
   const typewriterRef = useRef(null);
   const imageWrapperRef = useRef(null);
-  const dotsBackgroundRef = useRef(null);
+  const backgroundShapeRef = useRef(null);
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
+  // Typewriter Effect
   useEffect(() => {
     const titles = [
       "Full-Stack Web Developer",
@@ -64,83 +66,30 @@ function Main() {
         }
       }
     };
-
     type();
-
     return () => {
       if (typewriterRef.current) {
         typewriterRef.current.innerText = "";
       }
     };
   }, []);
+
+  // GSAP Animations
   useEffect(() => {
-    // Letter-by-letter animation
-    if (textRef.current) {
-      const letters = textRef.current.innerText.split("");
-      textRef.current.innerHTML = letters
-        .map((letter) =>
-          letter === " "
-            ? `<span class="letter space">&nbsp;</span>`
-            : `<span class="letter">${letter}</span>`
-        )
-        .join("");
-
-      const lettersSpan = gsap.utils.toArray(".letter");
-      lettersSpan.forEach((letter) => {
-        letter.addEventListener("mouseenter", () => {
-          gsap.to(letter, {
-            y: -10,
-            color: "#ea4020",
-            duration: 0.3,
-            ease: "power3.out",
-          });
-        });
-        letter.addEventListener("mouseleave", () => {
-          gsap.to(letter, {
-            y: 0,
-            color: "#292929",
-            duration: 0.3,
-            ease: "power3.out",
-          });
-        });
-      });
-    }
-
-    // GSAP animations
     const ctx = gsap.context(() => {
       const timeline = gsap.timeline();
 
       if (!isMobile) {
         timeline
-          .from(".banner-left h5", {
+          .from(titleRef.current.querySelectorAll(".letter"), {
             y: 50,
             opacity: 0,
-            duration: 1,
+            stagger: 0.05,
+            duration: 0.8,
             ease: "power3.out",
           })
           .from(
-            ".banner-left .letter",
-            {
-              y: 50,
-              opacity: 0,
-              stagger: 0.05,
-              duration: 0.8,
-              ease: "power3.out",
-            },
-            "-=0.8"
-          )
-          .from(
-            ".banner-left .line",
-            {
-              scaleX: 0,
-              transformOrigin: "left center",
-              duration: 1,
-              ease: "power3.out",
-            },
-            "-=0.5"
-          )
-          .from(
-            ".banner-left h4",
+            typewriterRef.current.parentNode,
             {
               x: -50,
               opacity: 0,
@@ -150,7 +99,7 @@ function Main() {
             "-=0.5"
           )
           .from(
-            ".banner-left .btn-main",
+            ".main-btn",
             {
               y: 30,
               opacity: 0,
@@ -160,7 +109,7 @@ function Main() {
             "-=0.5"
           )
           .from(
-            ".banner-img img",
+            imageWrapperRef.current,
             {
               scale: 0.8,
               opacity: 0,
@@ -168,33 +117,25 @@ function Main() {
               ease: "power3.out",
             },
             "-=1"
+          )
+          .from(
+            backgroundShapeRef.current,
+            {
+              scale: 0,
+              transformOrigin: "center center",
+              duration: 1.5,
+              ease: "power3.out",
+            },
+            "-=1.2"
           );
-
-        // Scroll effects
-        gsap.to(imageWrapperRef.current, {
-          yPercent: -15,
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: "top center",
-            end: "bottom top",
-            scrub: true,
-          },
-        });
-
-        gsap.to(dotsBackgroundRef.current, {
-          backgroundPosition: "center 100%",
-          rotation: 360,
-          ease: "none",
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: "top center",
-            end: "bottom top",
-            scrub: true,
-          },
-        });
       } else {
         timeline.from(
-          ".banner-left h5, .banner-left h2, .banner-left h4, .banner-left .btn-main, .banner-img img",
+          [
+            titleRef.current,
+            typewriterRef.current.parentNode,
+            ".main-btn",
+            imageWrapperRef.current,
+          ],
           {
             y: 20,
             opacity: 0,
@@ -206,77 +147,66 @@ function Main() {
       }
     }, containerRef);
 
-    if (dotsBackgroundRef.current) {
-      dotsBackgroundRef.current.style.display = isMobile ? "none" : "block";
-    }
-
     return () => ctx.revert();
   }, [isMobile]);
 
   return (
-    <Box ref={containerRef} sx={{ px: { xs: 2, sm: 4, md: 8 }, py: 10 }}>
-      <Container id="home" maxWidth="xl">
-        <Grid container spacing={6} alignItems="center" justifyContent="center">
+    <Box
+      id="home"
+      ref={containerRef}
+      sx={{
+        py: { xs: 8, md: 10 },
+        overflow: "hidden",
+        position: "relative",
+      }}
+    >
+      <Container maxWidth="xl">
+        <Grid
+          container
+          spacing={{ xs: 4, md: 6 }}
+          alignItems="center"
+          justifyContent="space-between"
+        >
           {/* Left Text Section */}
-          <Grid size={{ xs: 12, md: 6 }} sx={{ position: "relative" }}>
+          <Grid item xs={12} md={6}>
             <Stack
-              className="banner-left"
-              spacing={2}
+              spacing={{ xs: 2, md: 3 }}
               sx={{
-                mt: { xs: 4, md: 0 },
-                mb: { xs: 4, md: 0 },
                 textAlign: { xs: "center", md: "left" },
                 alignItems: { xs: "center", md: "flex-start" },
-                position: "relative",
-                zIndex: 1,
               }}
             >
               <Typography
                 variant="h5"
                 sx={{
                   color: "text.primary",
-                  fontSize: {
-                    xs: "1rem",
-                    sm: "1.3rem",
-                    md: "1.5rem",
-                    lg: "1.8rem",
-                  },
+                  fontSize: { xs: "1rem", sm: "1.3rem", md: "1.5rem" },
                   fontWeight: 400,
                 }}
               >
                 Hi There, I'm
               </Typography>
-
               <Typography
                 variant="h2"
-                ref={textRef}
+                ref={titleRef}
                 sx={{
                   color: "#292929",
                   fontSize: {
-                    xs: "2.8rem",
-                    sm: "4.5rem",
-                    md: "5.5rem",
+                    xs: "2.5rem",
+                    sm: "3.5rem",
+                    md: "4rem",
                     lg: "4.5rem",
                   },
                   fontWeight: 600,
-
-                  textAlign: { xs: "center", md: "left" },
-                  "& .letter": {
-                    display: "inline-block",
-                    cursor: "pointer",
-                    mx: "1px",
-                  },
-                  "& .letter.space": { width: "6px" },
                 }}
               >
                 MEET SHAH
               </Typography>
-
               <Typography
                 variant="h4"
                 sx={{
                   borderLeft: { md: "3px solid #ea4020" },
-                  pl: { md: "12px" },
+                  pl: { md: 2 },
                   fontSize: {
                     xs: "1.2rem",
                     sm: "1.8rem",
@@ -285,16 +215,15 @@ function Main() {
                   },
                   fontWeight: 300,
                   color: "#444",
-                  textAlign: { xs: "center", md: "left" },
-                  minHeight: "50px", // Prevent layout shift
+                  minHeight: "40px",
                 }}
               >
                 <span ref={typewriterRef}></span>
               </Typography>
-
               <Button
-                className="btn-main"
+                className="main-btn"
                 variant="contained"
+                href="#contact" // scrolls to contact section
                 sx={{
                   bgcolor: "#ea4020",
                   color: "white",
@@ -304,9 +233,8 @@ function Main() {
                   fontWeight: "bold",
                   textTransform: "uppercase",
                   borderRadius: "5px",
-                  transition: "all 0.3s ease",
                   "&:hover": {
-                    bgcolor: "#0056b3",
+                    bgcolor: "#c4341b",
                     transform: "scale(1.05)",
                   },
                 }}
@@ -315,64 +243,60 @@ function Main() {
               </Button>
             </Stack>
           </Grid>
-
           {/* Right Image Section */}
-          <Grid size={{ xs: 12, md: 6 }}>
+          <Grid
+            item
+            xs={12}
+            md={6}
+            sx={{
+              display: "flex",
+              justifyContent: { xs: "center", md: "flex-end" },
+              alignItems: "center",
+              mt: { xs: 4, md: 0 },
+            }}
+          >
             <Box
-              ref={dotsBackgroundRef}
-              sx={{
-                position: "absolute",
-                top: "54%",
-                left: "57%",
-                width: "100%",
-                height: "100%",
-                transform: "translate(-35%, -40%)",
-                backgroundImage:
-                  'url("https://demo.dezven.com/project/web-design/portfolio/1/images/dots.png")',
-                backgroundPosition: "center",
-                backgroundSize: "contain",
-                backgroundRepeat: "no-repeat",
-                zIndex: -2,
-              }}
-            />
-            <Box
-              className="banner-top"
               ref={imageWrapperRef}
               sx={{
-                p: "40px",
                 position: "relative",
-                overflow: "hidden",
-                "&:after": {
-                  content: '""',
-                  position: "absolute",
-                  inset: 0,
-                  width: { xs: "100%", md: "calc(100% + 50px)" },
-                  border: "20px solid #ea4020",
-                  borderRight: 0,
-                  borderRadius: { xs: "0", md: "47% 0% 0% 47%" },
-                  bgcolor: "#fff",
-                  zIndex: -1,
-                },
+                width: { xs: "80%", sm: "70%", md: "100%" },
+                maxWidth: "500px",
               }}
             >
               <Box
-                className="banner-img"
+                ref={backgroundShapeRef}
                 sx={{
-                  borderRadius: { xs: "0", md: "50% 50% 0% 50%" },
-                  border: "15px solid #292929",
-                  position: "relative",
-                  zIndex: 1,
-                  overflow: "hidden",
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  width: "120%",
+                  height: "120%",
+                  bgcolor: "#f0f0f0",
+                  zIndex: -1,
+                  borderRadius: {
+                    xs: "50% 50% 0 0",
+                    md: "47% 0 0 47%",
+                  },
+                  border: "20px solid #ea4020",
+                  borderRight: 0,
+                  display: { xs: "none", md: "block" },
                 }}
-              >
-                <Box
-                  component="img"
-                  loading="lazy"
-                  src={meetImage}
-                  alt="meet"
-                  sx={{ width: "100%", display: "block" }}
-                />
-              </Box>
+              />
+              <Box
+                component="img"
+                loading="lazy"
+                src={meetImage}
+                alt="Meet Shah"
+                sx={{
+                  width: "100%",
+                  height: "auto",
+                  display: "block",
+                  borderRadius: { xs: "50%", md: "47% 0 0 47%" },
+                  border: "15px solid #292929",
+                  boxShadow: "0 10px 30px rgba(0,0,0,0.1)",
+                }}
+              />
             </Box>
           </Grid>
         </Grid>

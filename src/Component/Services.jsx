@@ -1,5 +1,11 @@
 import React, { useEffect, useRef, forwardRef } from "react";
-import { Box, Typography, Container } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Container,
+  Paper,
+  Chip,
+} from "@mui/material";
 import Timeline from "@mui/lab/Timeline";
 import TimelineItem, { timelineItemClasses } from "@mui/lab/TimelineItem";
 import TimelineSeparator from "@mui/lab/TimelineSeparator";
@@ -12,28 +18,47 @@ import ComponentTitle from "./UI/ComponentTitle";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Define a simple, reusable data structure for your education items
 const educationData = [
   {
+    title: "IIT Guwahati x AlmaBetter – Full Stack MERN Specialization Program",
+    years: "2024 – Present",
+    description: [
+      "Learning advanced MERN stack technologies (MongoDB, Express.js, React.js, Node.js).",
+      "Built multiple full-stack projects focusing on scalability and performance.",
+      "Hands-on experience with industry-standard tools and workflows.",
+    ],
+  },
+  {
     title: "SHREE SWAMINARAYAN GURUKUL OF COMPUTER SCIENCE, BHAVNAGAR",
-    years: "2020 - 2023",
+    years: "2020 – 2023",
+    description: [
+      "Bachelor of Computer Applications (BCA).",
+      "Strong foundation in programming, databases, and web development.",
+      "Actively participated in coding competitions and group projects.",
+    ],
   },
   {
     title: "B M COMMERCE HIGH SCHOOL, BHAVNAGAR",
-    years: "2018 - 2020",
+    years: "2018 – 2020",
+    description: [
+      "Higher Secondary Education in Commerce Stream.",
+      "Focused on Mathematics and Statistics as supporting subjects.",
+      "Engaged in extracurricular activities and teamwork initiatives.",
+    ],
   },
 ];
 
 const AnimatedTimeline = forwardRef(({ data }, ref) => {
   const connectorRefs = useRef([]);
+  const dotRefs = useRef([]);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Staggered animation for each timeline item
+      // Animate cards
       gsap.from(ref.current.children, {
         opacity: 0,
         x: -50,
-        stagger: 0.2,
+        stagger: 0.3,
         duration: 0.8,
         ease: "power2.out",
         scrollTrigger: {
@@ -42,21 +67,38 @@ const AnimatedTimeline = forwardRef(({ data }, ref) => {
         },
       });
 
-      // Animation for each timeline connector
-      connectorRefs.current.forEach((connector, index) => {
+      // Animate dots
+      dotRefs.current.forEach((dot, i) => {
+        if (dot) {
+          gsap.from(dot, {
+            scale: 0,
+            opacity: 0,
+            delay: i * 0.3,
+            duration: 0.4,
+            ease: "back.out(1.7)",
+            scrollTrigger: {
+              trigger: dot,
+              start: "top 80%",
+            },
+          });
+        }
+      });
+
+      // Animate connectors
+      connectorRefs.current.forEach((connector, i) => {
         if (connector) {
           gsap.fromTo(
             connector,
             { scaleY: 0, transformOrigin: "top" },
             {
               scaleY: 1,
-              duration: 1,
+              delay: i * 0.4,
+              duration: 0.8,
               ease: "power2.out",
               scrollTrigger: {
                 trigger: connector.parentElement,
-                start: "top 75%",
+                start: "top 70%",
                 end: "bottom 50%",
-                // 👇 Adjust this value to control speed
                 scrub: 0.5,
               },
             }
@@ -72,10 +114,7 @@ const AnimatedTimeline = forwardRef(({ data }, ref) => {
     <Timeline
       ref={ref}
       sx={{
-        [`& .${timelineItemClasses.root}:before`]: {
-          flex: 0,
-          padding: 0,
-        },
+        [`& .${timelineItemClasses.root}:before`]: { flex: 0, padding: 0 },
         px: { xs: 0, md: 2 },
       }}
     >
@@ -83,10 +122,11 @@ const AnimatedTimeline = forwardRef(({ data }, ref) => {
         <TimelineItem key={index}>
           <TimelineSeparator>
             <TimelineDot
+              ref={(el) => (dotRefs.current[index] = el)}
               sx={{
                 bgcolor: "#ef7641",
-                height: "15px",
-                width: "15px",
+                height: { xs: 12, sm: 15 },
+                width: { xs: 12, sm: 15 },
                 boxShadow: {
                   xs: "none",
                   md: index === 0 ? "0px 0px 10px 3px #fec86a" : "none",
@@ -98,31 +138,46 @@ const AnimatedTimeline = forwardRef(({ data }, ref) => {
                 ref={(el) => (connectorRefs.current[index] = el)}
                 sx={{
                   bgcolor: "#ef7641",
-                  height: "8rem",
+                  height: { xs: "5rem", sm: "8rem", md: "8rem" },
                 }}
               />
             )}
           </TimelineSeparator>
-          <TimelineContent sx={{ pt: 1, pb: 3 }}>
-            <Typography
-              variant="h6"
+          <TimelineContent sx={{ py: { xs: 1, sm: 2 }, px: { xs: 1, sm: 2 } }}>
+            <Paper
+              elevation={4}
               sx={{
-                fontSize: { xs: "1rem", sm: "1.5rem", md: "1.5rem" },
-                fontWeight: 500,
-                lineHeight: 1.5,
+                p: { xs: 2, sm: 3 },
+                borderRadius: "12px",
+                borderLeft: "4px solid #ef7641",
+                transition: "transform 0.3s ease-in-out",
+                "&:hover": { transform: "translateY(-5px)" },
               }}
             >
-              {item.title}
-            </Typography>
-            <Typography
-              variant="body1"
-              sx={{
-                color: "text.secondary",
-                fontSize: { xs: "0.8rem", sm: "1rem" },
-              }}
-            >
-              {item.years}
-            </Typography>
+              <Chip
+                label={item.years}
+                size="small"
+                sx={{
+                  bgcolor: "#ef7641",
+                  color: "#fff",
+                  mb: 1,
+                  fontSize: { xs: "0.65rem", sm: "0.75rem" },
+                }}
+              />
+              <Typography variant="h6" fontWeight={600} sx={{ fontSize: { xs: "0.9rem", sm: "1.1rem" } }}>
+                {item.title}
+              </Typography>
+              <ul style={{ margin: 0, paddingLeft: "1.2rem" }}>
+                {item.description.map((desc, i) => (
+                  <li
+                    key={i}
+                    style={{ marginBottom: "0.4rem", fontSize: i === 0 ? "0.85rem" : "0.8rem" }}
+                  >
+                    {desc}
+                  </li>
+                ))}
+              </ul>
+            </Paper>
           </TimelineContent>
         </TimelineItem>
       ))}
@@ -130,14 +185,12 @@ const AnimatedTimeline = forwardRef(({ data }, ref) => {
   );
 });
 
-
 function Education() {
   const headingRef = useRef(null);
   const timelineRef = useRef(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Animate Heading (using the ref passed from parent)
       gsap.from(headingRef.current, {
         opacity: 0,
         y: 20,
@@ -157,12 +210,11 @@ function Education() {
     <Box
       id="education"
       sx={{
-        mt: { xs: "5%", md: "5%" }, // responsive margin-top
-        mb: { xs: "10%", md: "5%" }, // responsive margin-bottom
+        mt: { xs: "5%", sm: "5%", md: "5%" },
+        mb: { xs: "12%", sm: "8%", md: "5%" },
       }}
     >
       <ComponentTitle title="Education" ref={headingRef} />
-
       <Container maxWidth="md">
         <AnimatedTimeline data={educationData} ref={timelineRef} />
       </Container>

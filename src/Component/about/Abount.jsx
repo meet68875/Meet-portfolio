@@ -45,6 +45,7 @@ const About = () => {
           boxShadow: 3,
           bgcolor: "#fff",
           overflow: "hidden",
+           borderLeft: "4px solid #ef7641",
         }}
       >
         <CardContent sx={{ p: { xs: 3, md: 6 } }}>

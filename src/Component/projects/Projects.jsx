@@ -1,30 +1,24 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   Box,
   Typography,
-  Grid,
-  Chip,
-  IconButton,
-  Container,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogActions,
   Button,
+  Container,
+  Stack,
   Card,
   CardContent,
-  CardActionArea,
-  useTheme,
-  useMediaQuery,
-  CardActions,
+  IconButton,
+  Modal,
+  Fade,
+  Backdrop,
+  Divider,
 } from "@mui/material";
-import { GitHub, OpenInNew, Close } from "@mui/icons-material";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import CloseIcon from "@mui/icons-material/Close";
 import ComponentTitle from "../UI/ComponentTitle";
 
-gsap.registerPlugin(ScrollTrigger);
-
+// Project Data (unchanged)
 const projectsData = [
   {
     date: "01/2022",
@@ -59,253 +53,219 @@ const projectsData = [
     liveLink: "https://live-link.com",
   },
 ];
-
-const ProjectCard = ({ project, onClick }) => {
-  const { date, title, description, liveLink } = project;
-  const truncatedDescription = description.length > 100
-    ? description.substring(0, 100) + "..."
-    : description;
-
-  const theme = useTheme();
-
-  return (
-    <Card
-      elevation={8}
-      sx={{
-        height: 200, // Fixed height for all cards
-       
-        borderRadius: theme.shape.borderRadius * 2,
-        transition: "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
-        "&:hover": {
-          transform: "translateY(-10px)",
-          boxShadow: `0 16px 24px rgba(0,0,0,0.2), 0 6px 10px rgba(0,0,0,0.1)`,
-        },
-      }}
-    >
-      <CardActionArea onClick={onClick} sx={{ flexGrow: 1 }}>
-        <CardContent sx={{ display: "flex", flexDirection: "column", height: "100%", p: 3 }}>
-          <Box mb={2}>
-            <Chip
-              label={date}
-              size="small"
-              sx={{ bgcolor: "#ea4020", color: "#fff", fontWeight: 600 }}
-            />
-          </Box>
-          <Typography variant="h5" component="h3" gutterBottom sx={{ fontWeight: 600 }}>
-            {title}
-          </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ flexGrow: 1, lineHeight: 1.6 }}>
-            {truncatedDescription}
-          </Typography>
-        </CardContent>
-      </CardActionArea>
-      <CardActions sx={{ justifyContent: "flex-end", px: 3, pb: 3, pt: 0 }}>
-        {liveLink && (
-          <Button
-            size="small"
-            color="primary"
-            endIcon={<OpenInNew />}
-            href={liveLink}
-            target="_blank"
-            rel="noopener"
-            onClick={(e) => e.stopPropagation()}
-            sx={{
-              color: '#ea4020',
-              '&:hover': {
-                backgroundColor: 'rgba(234, 64, 32, 0.04)',
-              },
-            }}
-          >
-            Live
-          </Button>
-        )}
-      </CardActions>
-    </Card>
-  );
+const modalStyle = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: { xs: "90%", sm: "80%", md: "70%" },
+  bgcolor: "background.paper",
+  boxShadow: 24,
+  p: 4,
+  borderRadius: "12px",
+  maxHeight: "80vh",
+  overflowY: "auto",
+  outline: "none",
 };
 
-const ProjectDetailsModal = ({ open, project, onClose }) => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-
-  if (!project) return null;
-
-  const { date, title, description, achievements, githubLink, liveLink } = project;
-
-  return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-      fullScreen={isMobile}
-      maxWidth="sm"
-      fullWidth
-      PaperProps={{
-        sx: {
-          borderRadius: { xs: 0, sm: theme.shape.borderRadius * 2 },
-          boxShadow: theme.shadows[20],
-        },
-      }}
-    >
-      <DialogTitle sx={{ m: 0, p: 2, borderBottom: `1px solid ${theme.palette.divider}` }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Typography variant="h5" sx={{ fontWeight: 600 }}>{title}</Typography>
-          <IconButton
-            aria-label="close"
-            onClick={onClose}
-            sx={{
-              color: '#ea4020',
-              '&:hover': {
-                bgcolor: 'rgba(234, 64, 32, 0.1)',
-              },
-            }}
-          >
-            <Close />
-          </IconButton>
-        </Box>
-      </DialogTitle>
-      <DialogContent sx={{ p: 3, display: 'flex', flexDirection: 'column', gap: 2 }}>
-        <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap' }}>
-          <Chip
-            label={date}
-            size="small"
-            sx={{
-              bgcolor: '#ea4020',
-              color: '#fff',
-              fontWeight: 'bold',
-            }}
-          />
-          {achievements && (
-            <Chip
-              label={achievements}
+// Project Card Component
+const ProjectCard = ({ project, onClick }) => (
+  <Card
+    sx={{
+      height: "100%",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "space-between",
+      borderRadius: "12px",
+      boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+      borderLeft: "4px solid #ef7641",
+      transition: "transform 0.3s ease, box-shadow 0.3s ease",
+      "&:hover": {
+        transform: "translateY(-8px)",
+        boxShadow: "0 8px 30px rgba(0,0,0,0.2)",
+      },
+    }}
+  >
+    <CardContent sx={{ pb: 1 }}>
+      <Typography variant="caption" color="text.secondary" gutterBottom>
+        {project.date}
+      </Typography>
+      <Typography variant="h6" component="div" sx={{ fontWeight: "bold" }}>
+        {project.title}
+      </Typography>
+      <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+        {project.description.length > 120
+          ? `${project.description.substring(0, 120)}...`
+          : project.description}
+      </Typography>
+      {project.achievements && (
+        <Typography
+          variant="body2"
+          sx={{ mt: 2, color: "primary.main", fontStyle: "italic" }}
+        >
+          🏆 {project.achievements}
+        </Typography>
+      )}
+    </CardContent>
+    <Box sx={{ p: 2, pt: 0 }}>
+      <Stack
+        direction="row"
+        spacing={1}
+        alignItems="center"
+        justifyContent="space-between"
+      >
+        <Button
+          onClick={() => onClick(project)}
+          size="small"
+          sx={{
+            color: "#ea4020",
+            fontWeight: "bold",
+            "&:hover": { bgcolor: "transparent", textDecoration: "underline" },
+          }}
+        >
+          Read More
+        </Button>
+        <Box>
+          {project.githubLink && (
+            <IconButton
+              href={project.githubLink}
+              target="_blank"
               size="small"
-              icon={<span role="img" aria-label="trophy">🏆</span>}
-              sx={{
-                bgcolor: theme.palette.success.main,
-                color: theme.palette.success.contrastText,
-                fontWeight: 'bold',
-              }}
-            />
+              sx={{ color: "#292929" }}
+            >
+              <GitHubIcon />
+            </IconButton>
+          )}
+          {project.liveLink && (
+            <IconButton
+              href={project.liveLink}
+              target="_blank"
+              size="small"
+              sx={{ color: "#ea4020" }}
+            >
+              <OpenInNewIcon />
+            </IconButton>
           )}
         </Box>
-        <Typography variant="h6" component="h4" sx={{ fontWeight: 600, mt: 1 }}>
-          Description
-        </Typography>
-        <Typography variant="body1" color="text.secondary" sx={{ lineHeight: 1.6 }}>
-          {description}
-        </Typography>
-      </DialogContent>
-      <DialogActions sx={{ p: 2, justifyContent: 'flex-start', gap: 2, flexWrap: 'wrap', borderTop: `1px solid ${theme.palette.divider}` }}>
-        {githubLink && (
-          <Button
-            href={githubLink}
-            target="_blank"
-            rel="noopener"
-            variant="contained"
-            sx={{
-              bgcolor: theme.palette.grey[900],
-              "&:hover": {
-                bgcolor: "grey.700",
-              },
-              textTransform: 'none',
-            }}
-            startIcon={<GitHub />}
-          >
-            GitHub
-          </Button>
-        )}
-        {liveLink && (
-          <Button
-            href={liveLink}
-            target="_blank"
-            rel="noopener"
-            variant="contained"
-            sx={{
-              bgcolor: '#ea4020',
-              "&:hover": {
-                bgcolor: "#d43a1c",
-              },
-              textTransform: 'none',
-            }}
-            startIcon={<OpenInNew />}
-          >
-            Live Demo
-          </Button>
-        )}
-      </DialogActions>
-    </Dialog>
-  );
-};
+      </Stack>
+    </Box>
+  </Card>
+);
 
-function Projects() {
-  const headingRef = useRef(null);
-  const projectsGridRef = useRef(null);
-  const [openModal, setOpenModal] = useState(false);
+// Main Projects Component
+const Projects = () => {
+  const [open, setOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
+  const headingRef = useRef(null);
 
-  const handleOpenModal = (project) => {
+  const handleOpen = (project) => {
     setSelectedProject(project);
-    setOpenModal(true);
+    setOpen(true);
   };
-
-  const handleCloseModal = () => {
-    setOpenModal(false);
+  const handleClose = () => {
+    setOpen(false);
     setSelectedProject(null);
   };
 
-  useEffect(() => {
-    // Add a check to ensure refs are not null before animating
-    if (!headingRef.current || !projectsGridRef.current) return;
-
-    const ctx = gsap.context(() => {
-      gsap.from(headingRef.current, {
-        opacity: 0,
-        y: 20,
-        duration: 0.8,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: headingRef.current,
-          start: "top 90%",
-        },
-      });
-
-      // Use gsap.utils.toArray() for a robust solution
-      const projectCards = gsap.utils.toArray(projectsGridRef.current.children);
-      
-      gsap.from(projectCards, {
-        opacity: 0,
-        y: 50,
-        stagger: 0.2,
-        duration: 1,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: projectsGridRef.current,
-          start: "top 80%",
-        },
-      });
-    }, projectsGridRef);
-
-    return () => ctx.revert();
-  }, []);
-
   return (
-    <Box id="projects" sx={{ py: 8, bgcolor: 'background.default' }}>
-      <ComponentTitle title="Projects" ref={headingRef} />
-      <Container maxWidth="lg" sx={{ mt: 5 }}>
-        <Grid container spacing={{ xs: 3, sm: 4, md: 5 }} justifyContent="center" ref={projectsGridRef}>
+    <Box id="projects" sx={{ py: { xs: 8, md: 12 } }}>
+      <Container maxWidth="xl">
+        <ComponentTitle title="projects" ref={headingRef} />
+
+        <Box
+          sx={{
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "start",
+            gap: { xs: 3, sm: 4, md: 5 },
+            mt: 4,
+          }}
+        >
           {projectsData.map((project, index) => (
-            <Grid item xs={12} sm={6} md={3} key={index}>
-              <ProjectCard project={project} onClick={() => handleOpenModal(project)} />
-            </Grid>
+            <Box
+              key={index}
+              sx={{
+                flex: { xs: "1 1 100%", sm: "1 1 45%", md: "1 1 30%" },
+                maxWidth: { xs: "100%", sm: "45%", md: "30%" },
+              }}
+            >
+              <ProjectCard project={project} onClick={handleOpen} />
+            </Box>
           ))}
-        </Grid>
+        </Box>
       </Container>
-      <ProjectDetailsModal
-        open={openModal}
-        project={selectedProject}
-        onClose={handleCloseModal}
-      />
+
+      {/* Modal */}
+      <Modal
+        open={open}
+        onClose={handleClose}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{ timeout: 500 }}
+      >
+        <Fade in={open}>
+          <Box sx={modalStyle}>
+            <IconButton
+              aria-label="close"
+              onClick={handleClose}
+              sx={{ position: "absolute", right: 8, top: 8 }}
+            >
+              <CloseIcon />
+            </IconButton>
+            {selectedProject && (
+              <>
+                <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+                  {selectedProject.title}
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  {selectedProject.date}
+                </Typography>
+                <Divider sx={{ my: 2 }} />
+                <Typography sx={{ mt: 2 }}>
+                  {selectedProject.description}
+                </Typography>
+                {selectedProject.achievements && (
+                  <Typography
+                    variant="body1"
+                    sx={{ mt: 2, color: "primary.main", fontStyle: "italic" }}
+                  >
+                    🏆 <b>Achievements:</b> {selectedProject.achievements}
+                  </Typography>
+                )}
+                <Stack direction="row" spacing={2} sx={{ mt: 3 }}>
+                  {selectedProject.githubLink && (
+                    <Button
+                      variant="outlined"
+                      startIcon={<GitHubIcon />}
+                      href={selectedProject.githubLink}
+                      target="_blank"
+                      sx={{ color: "#292929", borderColor: "#292929" }}
+                    >
+                      GitHub
+                    </Button>
+                  )}
+                  {selectedProject.liveLink && (
+                    <Button
+                      variant="contained"
+                      startIcon={<OpenInNewIcon />}
+                      href={selectedProject.liveLink}
+                      target="_blank"
+                      sx={{
+                        bgcolor: "#ea4020",
+                        "&:hover": { bgcolor: "#c4341b" },
+                      }}
+                    >
+                      Live Demo
+                    </Button>
+                  )}
+                </Stack>
+              </>
+            )}
+          </Box>
+        </Fade>
+      </Modal>
     </Box>
   );
-}
+};
 
 export default Projects;
